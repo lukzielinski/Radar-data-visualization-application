@@ -3,10 +3,12 @@
   import CanvasContainer from './views/Canvas/CanvasContainer.svelte'
   import * as DataType from './views/Canvas/DataType'
   import Sidebar from './views/Sidebar.svelte'
+  import CanvasContainer3D from './views/Canvas/CanvasContainer3D.svelte';
   import { beforeUpdate } from 'svelte';
   import OpenFile from './views/OpenFile.svelte';
 
   let currentFile: File | null = null;
+  let index: number;
 
   $: if (currentFile) {
     void readFile(currentFile);
@@ -54,9 +56,10 @@
 </script>
 
 <main>
-  <Sidebar bind:readings={readings}/>
+  <Sidebar bind:readings={readings} bind:index={index}/>
   <OpenFile on:onFile={(e) => { currentFile = e.detail.file; }}/>
-  <CanvasContainer bind:readings={readings}/>
+  <CanvasContainer bind:readings={readings} bind:index={index}/>
+  <CanvasContainer3D bind:readings={readings} bind:index={index}/>
 </main>
 
 <style lang="less">
