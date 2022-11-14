@@ -1,0 +1,118 @@
+{
+  "columns": [
+    {
+      "minWidth": 40,
+      "download": false,
+      "formatter": "rowSelection",
+      "titleFormatter": "rowSelection",
+      "resizable": true,
+      "headerSort": false,
+      "width": 51
+    },
+    {
+      "field": "442;0",
+      "title": "442;0",
+      "minWidth": 40,
+      "resizable": true,
+      "sorter": "string",
+      "headerSort": true,
+      "width": 89
+    },
+    {
+      "field": "606726667511574;1;0;-1",
+      "title": "606726667511574;1;0;-1",
+      "minWidth": 40,
+      "resizable": true,
+      "sorter": "string",
+      "headerSort": true,
+      "width": 207
+    },
+    {
+      "field": "6092745065689087;2",
+      "title": "6092745065689087;2",
+      "minWidth": 40,
+      "resizable": true,
+      "sorter": "string",
+      "headerSort": true,
+      "width": 187
+    },
+    {
+      "field": "8844597339630127;3",
+      "title": "8844597339630127;3",
+      "minWidth": 40,
+      "resizable": true,
+      "sorter": "string",
+      "headerSort": true,
+      "width": 187
+    },
+    {
+      "field": "2129483222961426;0",
+      "title": "2129483222961426;0",
+      "minWidth": 40,
+      "resizable": true,
+      "sorter": "string",
+      "headerSort": true,
+      "width": 187
+    },
+    {
+      "field": "034632813185453415;-0",
+      "title": "034632813185453415;-0",
+      "minWidth": 40,
+      "resizable": true,
+      "sorter": "string",
+      "headerSort": true,
+      "width": 208
+    },
+    {
+      "field": "062075771391391754;-0",
+      "title": "062075771391391754;-0",
+      "minWidth": 40,
+      "resizable": true,
+      "sorter": "string",
+      "headerSort": true,
+      "width": 208
+    },
+    {
+      "field": "0691450983285904;0",
+      "title": "0691450983285904;0",
+      "minWidth": 40,
+      "resizable": true,
+      "sorter": "string",
+      "headerSort": true,
+      "width": 187
+    },
+    {
+      "field": "0;0",
+      "title": "0;0",
+      "minWidth": 40,
+      "resizable": true,
+      "sorter": "string",
+      "headerSort": true,
+      "width": 74
+    },
+    {
+      "field": "0;0",
+      "title": "0;0",
+      "minWidth": 40,
+      "resizable": true,
+      "sorter": "string",
+      "headerSort": true,
+      "width": 74
+    },
+    {
+      "field": "0",
+      "title": "0",
+      "minWidth": 40,
+      "resizable": true,
+      "sorter": "number",
+      "headerSort": true,
+      "width": 64
+    }
+  ],
+  "sort": [
+    {
+      "column": "442;0",
+      "dir": "asc"
+    }
+  ]
+}

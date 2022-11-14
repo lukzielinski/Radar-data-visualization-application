@@ -1,0 +1,62 @@
+{
+  "fields": [
+    {
+      "name": "442;0",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "606726667511574;1;0;-1",
+      "type": "yearmonth",
+      "format": "default"
+    },
+    {
+      "name": "6092745065689087;2",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "8844597339630127;3",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "2129483222961426;0",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "034632813185453415;-0",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "062075771391391754;-0",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "0691450983285904;0",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "0;0",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "0;0",
+      "type": "string",
+      "format": "default"
+    },
+    {
+      "name": "0",
+      "type": "number",
+      "format": "default"
+    }
+  ],
+  "missingValues": [
+    ""
+  ]
+}
