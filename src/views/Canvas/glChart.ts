@@ -6,8 +6,9 @@ import * as DataType from './DataType';
     
 // }
 
-export function initCharts (readings: DataType.Reading[], index: number) {
+export function initCharts (readings: DataType.Reading[], index: number, param: number) {
 //   d3.selectAll('div').remove(); 
+  console.log(param)
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
     width = 460,
     height = 400;
@@ -32,18 +33,13 @@ export function initCharts (readings: DataType.Reading[], index: number) {
   // Add Y axis
   const y = d3.scaleLinear().domain([ -5, 5 ]).range([ height, 0 ]);
   svg.append('g').call(d3.axisLeft(y));
-  
   // Add dots
-  svg
-    .append('g')
-    .selectAll('circle')
-    .data(readings)
-    .join('circle')
-    .attr('cx', function (d) {
-      return x(readings[index].posX);
-    })
-    .attr('cy', function (d) {
-      return y(readings[index].posY);
-    })
-    .attr('r', 5);
+  for (let i = 0; i < readings.length; i++){
+    svg 
+      .append('circle')
+      .attr('cx', x(readings[i].posX))
+      .attr('cy', y(readings[i].posY))
+      .attr('r', 2)
+      .style('fill', '#69b3a2')
+  }
 }
