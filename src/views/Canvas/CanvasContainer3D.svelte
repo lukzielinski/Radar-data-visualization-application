@@ -4,8 +4,7 @@
     
     export let readings: DataType.Reading[] = [];
     export let index: number;
-   
-    glCharts.drawChart()
+  
 
     $:if (index){
       void glCharts.initCharts(readings,index);

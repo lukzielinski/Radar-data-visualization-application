@@ -1,7 +1,13 @@
 import * as d3 from 'd3'
 import * as DataType from './DataType';
 
-export function drawChart () {
+
+// function drawChart () {
+    
+// }
+
+export function initCharts (readings: DataType.Reading[], index: number) {
+//   d3.selectAll('div').remove(); 
   const margin = { top: 10, right: 30, bottom: 30, left: 60 },
     width = 460,
     height = 400;
@@ -26,31 +32,18 @@ export function drawChart () {
   // Add Y axis
   const y = d3.scaleLinear().domain([ -5, 5 ]).range([ height, 0 ]);
   svg.append('g').call(d3.axisLeft(y));
-}
-
-function updateChartDots () {
+  
   // Add dots
-  const svg = d3.select('svg');
   svg
     .append('g')
-    .selectAll('dot')
-    .data(data)
-    .enter()
-    .append('circle')
+    .selectAll('circle')
+    .data(readings)
+    .join('circle')
     .attr('cx', function (d) {
-      return x(d.x);
+      return x(readings[index].posX);
     })
     .attr('cy', function (d) {
-      return y(d.y);
+      return y(readings[index].posY);
     })
-    .attr('r', 1.5)
-    .style('fill', '#69b3a2');
-}
-
-
-export function initCharts (readings: DataType.Reading[], index: number) {
-  // const svg = d3.select('svg');
-  // svg.selectAll('*').remove();
-  // drawChart();
-  // updateChartDots();
+    .attr('r', 5);
 }
