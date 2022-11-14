@@ -1,9 +1,9 @@
 <script lang="ts">
-    import * as DataType from './DataType';
-    import * as glCharts from './glChart';
-    
-    export let readings: DataType.Reading[] = [];
-    export let index: number;
+  import * as DataType from './DataType';
+  import * as glCharts from './glChart';
+  
+  export let readings: DataType.Reading[] = [];
+  export let index: number;
   
 
   $:if (index){
