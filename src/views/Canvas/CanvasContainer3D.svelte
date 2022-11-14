@@ -22,7 +22,7 @@
     // }
   </script>
   
-  <div></div>
+  <div id="my_dataviz"></div>
 
   <style lang="less">
   .canvas{

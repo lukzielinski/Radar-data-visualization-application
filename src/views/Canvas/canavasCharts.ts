@@ -68,20 +68,19 @@ function drawPoints (fillStyle: string) {
     ctx.stroke()
     ctx.fill()
     ctx.closePath()
-    convertTimestamp(readingsUpdated[currentPointIndex].timeStamp)
     if (currentPointIndex > 6){
       ctx.beginPath()
-      ctx.strokeStyle = '#8338ec'
-      ctx.fillStyle = '#8338ec'
+      ctx.strokeStyle = '#cdb4db'
+      ctx.fillStyle = '#cdb4db'
+      ctx.lineWidth = 1
       ctx.moveTo(center.x + readingsUpdated[currentPointIndex - 4].posX * 100, center.y + readingsUpdated[currentPointIndex - 4].posY * - 10)
       ctx.arc(center.x + readingsUpdated[currentPointIndex - 4].posX * 100, center.y + readingsUpdated[currentPointIndex - 4].posY * - 10 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
       ctx.lineTo(center.x + readingsUpdated[currentPointIndex - 3].posX * 100, center.y + readingsUpdated[currentPointIndex - 3].posY * - 10)
       ctx.arc(center.x + readingsUpdated[currentPointIndex - 3].posX * 100, center.y + readingsUpdated[currentPointIndex - 3].posY * - 10 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-      ctx.moveTo(center.x + readingsUpdated[currentPointIndex - 2].posX * 100, center.y + readingsUpdated[currentPointIndex - 2].posY * - 10)
-      ctx.moveTo(center.x + readingsUpdated[currentPointIndex - 2].posX * 100, center.y + readingsUpdated[currentPointIndex - 2].posY * - 10)
+      ctx.lineTo(center.x + readingsUpdated[currentPointIndex - 2].posX * 100, center.y + readingsUpdated[currentPointIndex - 2].posY * - 10)
       ctx.arc(center.x + readingsUpdated[currentPointIndex - 2].posX * 100, center.y + readingsUpdated[currentPointIndex - 2].posY * - 10 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
       ctx.lineTo(center.x + readingsUpdated[currentPointIndex - 1].posX * 100, center.y + readingsUpdated[currentPointIndex - 1].posY * - 10)
-      ctx.moveTo(center.x + readingsUpdated[currentPointIndex - 1].posX * 100, center.y + readingsUpdated[currentPointIndex - 1].posY * - 10)
+      ctx.arc(center.x + readingsUpdated[currentPointIndex - 1].posX * 100, center.y + readingsUpdated[currentPointIndex - 1].posY * - 10 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
       if (readingsUpdated[currentPointIndex - 1].objectsId === readingsUpdated[currentPointIndex - 2].objectsId){
         ctx.arc(center.x + readingsUpdated[currentPointIndex - 1].posX * 100, center.y + readingsUpdated[currentPointIndex - 1].posY * - 10 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
         ctx.lineTo(center.x + readingsUpdated[currentPointIndex].posX * 100, center.y + readingsUpdated[currentPointIndex].posY * - 10)
@@ -96,16 +95,6 @@ function drawPoints (fillStyle: string) {
   ctx.fill()
 }
 
-function convertTimestamp (timestamp: number) {
-  timeStampToDate(timestamp)
-}
-
-function timeStampToDate (timestamp: number) {
-  const time = new Date(timestamp)
-
-}
-
-
 export function adjustZoom (e: WheelEvent) {
   const zoomAmount = e.deltaY * scrollSensitivity
   if (zoomAmount) {
@@ -116,16 +105,46 @@ export function adjustZoom (e: WheelEvent) {
   draw()
 }
 
-
-
 function drawBackground () {
   ctx.lineWidth = 2
   ctx.strokeStyle = '#c9c5c5'
+  wrtiteTheXandY()
   drawBottomGridHorizontally()
   drawTopGridHorizontally()
   drawRightGridVertically()
   drawLeftGridVertically()
+  drawCoordinatesSystem()
 }
+
+function wrtiteTheXandY (){
+  const center = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+  }
+  ctx.beginPath()
+  ctx.font = '30px bold'
+  ctx.fillStyle = '#000000'
+  ctx.fillText('X', center.x + canvas.width - 1530, center.y - 10)
+  ctx.fillText('Y', center.x - 30, center.y - canvas.height + 1530)
+  ctx.closePath()
+}
+
+function drawCoordinatesSystem () {
+  const center = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+  }
+  ctx.beginPath()
+  ctx.lineWidth = 3
+  ctx.strokeStyle = '#000000'
+  ctx.moveTo(center.x, 0)
+  ctx.lineTo(center.x, canvas.height)
+  ctx.moveTo(0, center.y)
+  ctx.lineTo(canvas.width, center.y)
+  ctx.stroke()
+  ctx.closePath()
+}
+
 function drawBottomGridHorizontally () {
   ctx.beginPath()
 
@@ -140,10 +159,15 @@ function drawBottomGridHorizontally () {
 
 function drawTopGridHorizontally () {
   ctx.beginPath()
-
+  const center = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+  }
   for (let i = gridSpacing; i <= canvas.height * 2 * maxZoom; i = i + gridSpacing) {
+    if (i === 100){
+      ctx.fillText(`1`, center.x  + 100, center.y - 10)
+    }
     ctx.moveTo(-(maxZoom * canvas.width * 2), i)
-
     ctx.lineTo(maxZoom * canvas.width * 2, i)
   }
   ctx.stroke()
@@ -164,8 +188,14 @@ function drawRightGridVertically () {
 
 function drawLeftGridVertically () {
   ctx.beginPath()
-
+  const center = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+  }
   for (let i = gridSpacing; i <= canvas.width * 2 * maxZoom; i = i + gridSpacing) {
+    if (i === 100){
+      ctx.fillText(`1`, center.x + 7, center.y - 103)
+    }
     ctx.moveTo(-i, -(maxZoom * canvas.height * 2))
 
     ctx.lineTo(-i, maxZoom * canvas.height * 2)
