@@ -34,12 +34,12 @@
       if (numbers.length >= 12) {
         const reading: DataType.Reading = {
           tid: numbers[0],
-          posX: numbers[1],
-          posY: numbers[2],
-          posZ: numbers[3],
-          velX: numbers[4],
-          velY: numbers[5],
-          velZ: numbers[6],
+          timeStamp: numbers[1],
+          objectsId: numbers[2],
+          objectId: numbers[3],
+          posX: numbers[4],
+          posZ: numbers[5],
+          posY: numbers[6],
           accX: numbers[7],
           accY: numbers[8],
           accZ: numbers[9],

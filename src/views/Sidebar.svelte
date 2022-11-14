@@ -28,7 +28,7 @@
 <div>
     <div class='button forward' on:click={() => {incrementIndex()}}>+</div>
     <div class='button backward' on:click={() => {decrementIndex()}}>-</div>
-    <div class='button play' on:click={() => {playInterval = setInterval(incrementIndex, 0.1)}}>play</div>
+    <div class='button play' on:click={() => {playInterval = setInterval(incrementIndex, 50)}}>play</div>
     <div class='button stop' on:click={() => {clearInterval(playInterval)}}>stop</div>
 </div>
 {/if}

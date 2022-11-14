@@ -1,11 +1,11 @@
 export interface Reading {
     tid: number;
+    timeStamp: number;
+    objectsId: number;
+    objectId: number;
     posX: number;
-    posY: number;
     posZ: number;
-    velX: number;
-    velY: number;
-    velZ: number;
+    posY: number;
     accX: number;
     accY: number;
     accZ: number;
