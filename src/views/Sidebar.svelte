@@ -18,7 +18,7 @@
     
 </script>
 
-{#if readings.length != 0}
+{#if readings.length > 0}
 <div class="sidebar">
     <div class="grid-item">
         frame:  {readings[index].tid}
@@ -43,11 +43,11 @@
 <style lang="less">
     .sidebar {
         position: absolute;
-        font-size: 10px;
+        font-size: 20px;
         left:0;
         bottom: 0px;
-        width: 200px;
-        height: 100px;
+        width: 300px;
+        height: 150px;
         background-color: #f0f0f0;
         border-right: 1px solid #e0e0e0;
         display: grid;

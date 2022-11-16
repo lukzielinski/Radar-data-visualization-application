@@ -25,7 +25,7 @@
   let trace1 = {
     x: [  0, -10, -10, 10, 10 ],
     y: [ 1, -10, 10, -10, 10 ], 
-    z: [ 0, 0, 0, 0, 0 ],
+    z: [ 0, 1, 0, 0, 0 ],
     mode: 'markers',
     marker: {
       size: 10,
@@ -42,19 +42,12 @@ let layout =
     margin: {
       l: 0,
       r: 0,
-      b: 0,
+      b: 10,
       t: 0
     },
     xaxis: {
       autorange: false,
       range: [ -12, 12 ],
-      autotick: false,
-      ticks: 'outside',
-      tick0: 0,
-      dtick: 0.25,
-      ticklen: 8,
-      tickwidth: 4,
-      tickcolor: '#000',
       type: 'date'
     },
     yaxis: {
@@ -124,8 +117,6 @@ onMount(()=> {
     trace1.z = [ ...basePointsZ, ...(dataPoints.map(point => point.z)) ]
 
     Plotly.update('myDiv', data, layout);
-
-    // void glCharts.initCharts(readings,index);
   }
 </script>
 
