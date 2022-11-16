@@ -40,7 +40,6 @@ function draw (){
 function convertTimeStamp (){
   if (readingsUpdated.length > 0){
     const newTimeInMicroseconds = ((readingsUpdated[currentPointIndex].tid - readingsUpdated[0].tid) * 0.12) / 86400;
-    console.log(newTimeInMicroseconds);
   }
 }
 
@@ -70,19 +69,19 @@ function drawPoints (fillStyle: string) {
     ctx.stroke()
     ctx.fill()
     ctx.closePath()
-    if (currentPointIndex > 6){
+    if (currentPointIndex > 10){
       ctx.beginPath()
       ctx.strokeStyle = '#cdb4db'
       ctx.fillStyle = '#cdb4db'
       ctx.lineWidth = 1
-      ctx.moveTo(center.x + readingsUpdated[currentPointIndex - 4].posX * 100, center.y + readingsUpdated[currentPointIndex - 4].posY * - 100)
-      ctx.arc(center.x + readingsUpdated[currentPointIndex - 4].posX * 100, center.y + readingsUpdated[currentPointIndex - 4].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-      ctx.lineTo(center.x + readingsUpdated[currentPointIndex - 3].posX * 100, center.y + readingsUpdated[currentPointIndex - 3].posY * - 100)
-      ctx.arc(center.x + readingsUpdated[currentPointIndex - 3].posX * 100, center.y + readingsUpdated[currentPointIndex - 3].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-      ctx.lineTo(center.x + readingsUpdated[currentPointIndex - 2].posX * 100, center.y + readingsUpdated[currentPointIndex - 2].posY * - 100)
-      ctx.arc(center.x + readingsUpdated[currentPointIndex - 2].posX * 100, center.y + readingsUpdated[currentPointIndex - 2].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-      ctx.lineTo(center.x + readingsUpdated[currentPointIndex - 1].posX * 100, center.y + readingsUpdated[currentPointIndex - 1].posY * - 100)
-      ctx.arc(center.x + readingsUpdated[currentPointIndex - 1].posX * 100, center.y + readingsUpdated[currentPointIndex - 1].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
+      for (let i = 0; i < 10; i++){
+        ctx.beginPath()
+        ctx.lineTo(center.x + readingsUpdated[currentPointIndex - i].posX * 100, center.y + readingsUpdated[currentPointIndex - i].posY * - 100)
+        ctx.arc(center.x + readingsUpdated[currentPointIndex - i].posX * 100, center.y + readingsUpdated[currentPointIndex - i].posY * - 100 , 5 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
+        ctx.stroke()
+        ctx.fill()
+        ctx.closePath()
+      }
       if (readingsUpdated[currentPointIndex - 1].objectsId === readingsUpdated[currentPointIndex - 2].objectsId){
         ctx.arc(center.x + readingsUpdated[currentPointIndex - 1].posX * 100, center.y + readingsUpdated[currentPointIndex - 1].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
         ctx.lineTo(center.x + readingsUpdated[currentPointIndex].posX * 100, center.y + readingsUpdated[currentPointIndex].posY * - 100)
@@ -127,7 +126,7 @@ function wrtiteTheXandY (){
   ctx.font = '30px bold'
   ctx.fillStyle = '#000000'
   ctx.fillText('X', (canvas.width / 8) * cameraZoom, center.y - 10)
-  ctx.fillText('Y', center.x - 30, (canvas.width / 8) * cameraZoom)
+  ctx.fillText('Y', center.x - 30, (canvas.width / 8) + 290)
   ctx.closePath()
 }
 

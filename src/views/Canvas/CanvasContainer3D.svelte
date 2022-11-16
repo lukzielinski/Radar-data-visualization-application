@@ -23,16 +23,16 @@
   let dataPoints: point[]  = []
 
   let trace1 = {
-    x: [ 1, -10, -10, 10, 10 ],
+    x: [  0, -10, -10, 10, 10 ],
     y: [ 1, -10, 10, -10, 10 ], 
-    z: [ 1, 4, 1, 1, 1 ],
+    z: [ 0, 0, 0, 0, 0 ],
     mode: 'markers',
     marker: {
-      size: 12,
+      size: 10,
       line: {
         color: 'rgba(217, 217, 217, 0.14)',
-        width: 0.5 },
-      opacity: 0.8 },
+        width: 1 },
+      opacity: 1 },
     type: 'scatter3d'
 };
 
@@ -47,17 +47,38 @@ let layout =
     },
     xaxis: {
       autorange: false,
-      range: [ -2, 2 ],
+      range: [ -12, 12 ],
+      autotick: false,
+      ticks: 'outside',
+      tick0: 0,
+      dtick: 0.25,
+      ticklen: 8,
+      tickwidth: 4,
+      tickcolor: '#000',
       type: 'date'
     },
     yaxis: {
       autorange: false,
-      range: [ -2, 2 ],
+      range: [ -12, 12 ],
+      autotick: false,
+      ticks: 'outside',
+      tick0: 0,
+      dtick: 0.25,
+      ticklen: 8,
+      tickwidth: 4,
+      tickcolor: '#000',
       type: 'linear'
     },
     zaxis: {
       autorange: false,
-      range: [ -2, 2 ],
+      range: [ -12, 12 ],
+      autotick: false,
+      ticks: 'outside',
+      tick0: 0,
+      dtick: 0.25,
+      ticklen: 8,
+      tickwidth: 4,
+      tickcolor: '#000',
       type: 'linear'
     }
 };
@@ -108,18 +129,11 @@ onMount(()=> {
   }
 </script>
 
-<div id="myDiv"></div>
+<div class="canv3d-container" id="myDiv"></div>
 
 <style lang="less">
-.canvas{
-  width: 1000px;
-  height: 100%;
-  background-color: aliceblue;
-}
-.button{
-  position: absolute;
-  top: 0;
-  left: 0;
-}
+  .canv3d-container{
+    width: 900px;
+  }
 </style>
   

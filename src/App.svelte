@@ -56,13 +56,38 @@
 </script>
 
 <main>
-  <Sidebar bind:readings={readings} bind:index={index}/>
-  <OpenFile on:onFile={(e) => { currentFile = e.detail.file; }}/>
-  <CanvasContainer bind:readings={readings} bind:index={index}/>
-  <CanvasContainer3D bind:readings={readings} bind:index={index}/>
+<div class="grid-container">
+  <div class="grid-item">
+    <Sidebar bind:readings={readings} bind:index={index}/>
+    <OpenFile on:onFile={(e) => { currentFile = e.detail.file; }}/>
+  </div>
+  <div class="grid-item charts-container">
+    <div class="chart-item">
+      <CanvasContainer bind:readings={readings} bind:index={index}/>
+    </div>
+    <div class="chart-item">
+      <CanvasContainer3D bind:readings={readings} bind:index={index}/>
+    </div>
+    <!-- <CanvasContainer bind:readings={readings} bind:index={index}/> -->
+  </div>
+</div>
 </main>
 
 <style lang="less">
+  .grid-container { 
+    display: grid;
+    grid-template-rows: 10vh 80vh auto;
+    grid-gap: 10px;
+  }
+  .grid-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .charts-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+  }
   :global(:root) {
     --mobile-screen: 864px;
     --yellow: #ffb703;

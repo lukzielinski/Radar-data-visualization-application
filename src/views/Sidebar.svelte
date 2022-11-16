@@ -1,10 +1,12 @@
 <script lang="ts">
   import * as DataType from './Canvas/DataType';
+  import SidebarChart from './Canvas/SibarChart.svelte';
   export let readings: DataType.Reading[];
 
   export let index = 0;
 
   let playInterval: Timer;
+  let isSidebarVisible = false;
 
   function incrementIndex (){
     index++;
@@ -26,11 +28,17 @@
     <div class="grid-item">posZ:{readings[index].posZ}</div>
 </div>
 <div>
-    <div class='button forward' on:click={() => {incrementIndex()}}>+</div>
+    <div class='button forward'on:click={() => {incrementIndex()}}>+</div>
     <div class='button backward' on:click={() => {decrementIndex()}}>-</div>
     <div class='button play' on:click={() => {playInterval = setInterval(incrementIndex, 50)}}>play</div>
     <div class='button stop' on:click={() => {clearInterval(playInterval)}}>stop</div>
 </div>
+<div class="showSideBar">
+    <div class='button showSideBarButton' on:click={() => {isSidebarVisible = !isSidebarVisible}}>show</div>
+</div>
+{/if}
+{#if isSidebarVisible}
+    <SidebarChart {readings} {index}/>
 {/if}
 <style lang="less">
     .sidebar {
@@ -83,5 +91,11 @@
         width: 100px;
         bottom: 30px;
         right: 190px;
+    }
+    .showSideBarButton{
+        position: absolute;
+        width: 100px;
+        top: 30px;
+        left: 30px;
     }
 </style>
