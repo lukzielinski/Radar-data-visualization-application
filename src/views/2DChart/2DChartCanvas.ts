@@ -1,4 +1,4 @@
-import * as DataType from './DataType'
+import * as DataType from '../FileEditor/DataType'
 
 let canvas: HTMLCanvasElement
 let ctx: CanvasRenderingContext2D
@@ -73,14 +73,14 @@ function drawPoints (fillStyle: string) {
       ctx.beginPath()
       ctx.strokeStyle = '#cdb4db'
       ctx.fillStyle = '#cdb4db'
-      ctx.lineWidth = 1
+      ctx.lineWidth = 4
       for (let i = 0; i < 12; i++){
         ctx.beginPath()
-        ctx.lineTo(center.x + readingsUpdated[currentPointIndex - i].posX * 100, center.y + readingsUpdated[currentPointIndex - i].posY * - 100)
+        ctx.strokeStyle = '#cdb4db'
+        ctx.fillStyle = '#cdb4db'
         ctx.arc(center.x + readingsUpdated[currentPointIndex - i].posX * 100, center.y + readingsUpdated[currentPointIndex - i].posY * - 100 , 5 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
         ctx.stroke()
         ctx.fill()
-        ctx.closePath()
       }
       if (readingsUpdated[currentPointIndex - 1].objectsId === readingsUpdated[currentPointIndex - 2].objectsId){
         // ctx.arc(center.x + readingsUpdated[currentPointIndex - 1].posX * 100, center.y + readingsUpdated[currentPointIndex - 1].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)

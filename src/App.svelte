@@ -1,17 +1,21 @@
 <script lang="ts">
   import { Router, Route } from 'svelte-routing'
-  import CanvasContainer from './views/Canvas/CanvasContainer.svelte'
-  import * as DataType from './views/Canvas/DataType'
+  import CanvasContainer from './views/2DChart/CanvasContainer.svelte'
+  import * as DataType from './views/FileEditor/DataType'
+  import logo from './assets/logo-1.png'
+  import  animatecss from 'animate.css'
   import Sidebar from './views/Sidebar.svelte'
-  import CanvasContainer3D from './views/Canvas/CanvasContainer3D.svelte';
+  import CanvasContainer3D from './views/3DChart/CanvasContainer3D.svelte';
   import { beforeUpdate } from 'svelte';
-  import OpenFile from './views/OpenFile.svelte';
+  
 
   let currentFile: File | null = null;
   let index: number;
+  let blurSite = true;
 
   $: if (currentFile) {
     void readFile(currentFile);
+    blurSite = false;
   }
 
   let readings: DataType.Reading[] = [];
@@ -56,21 +60,29 @@
 </script>
 
 <main>
-<div class="grid-container">
-  <div class="grid-item">
-    <Sidebar bind:readings={readings} bind:index={index}/>
-    <OpenFile on:onFile={(e) => { currentFile = e.detail.file; }}/>
-  </div>
-  <div class="grid-item charts-container">
-    <div class="chart-item">
-      <CanvasContainer bind:readings={readings} bind:index={index}/>
+  <Sidebar bind:readings={readings} bind:index={index} on:onFile={(e) => { currentFile = e.detail.file; }}/>
+  {#if blurSite}
+    <div class="blured"></div>
+    <div class="app-header">
+      <div class="animate__animated animate__fadeIn animate__delay-1s">People counting tracker analizer</div>
+      <img class="logo animate__animated animate__fadeIn animate__delay-2s" src={logo} alt='logo'/>
     </div>
-    <div class="chart-item">
-      <CanvasContainer3D bind:readings={readings} bind:index={index}/>
+    {:else}
+    <div class="grid-container">
+      <div class="grid-item"></div>  
+      <div class="grid-item"></div>
+      <div class="grid-item"></div>
+        <!-- <OpenFile on:onFile={(e) => { currentFile = e.detail.file; }}/> -->
+      <!-- <div class="grid-item charts-container">
+        <div class="chart-item">
+          <CanvasContainer bind:readings={readings} bind:index={index}/>
+        </div>
+        <div class="chart-item">
+          <CanvasContainer3D bind:readings={readings} bind:index={index}/>
+        </div>
+      </div> -->
     </div>
-    <!-- <CanvasContainer bind:readings={readings} bind:index={index}/> -->
-  </div>
-</div>
+  {/if}
 </main>
 
 <style lang="less">
@@ -83,6 +95,36 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .blured {
+        display: block;
+        position: absolute;
+        width: calc(100vw - 300px);
+        height: calc(100vh);
+        z-index: 2;
+        background-color: rgba(0, 0, 0, 0.459);
+        backdrop-filter: blur(10px);
+        left: 300px;
+    }
+  .app-header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #fff;
+    z-index: 3;
+    position: absolute;
+    width: calc(100vw - 300px);
+    height: 10vh;
+    left: 300px;
+    top: 45vh;
+  }
+  .logo{
+    width: 160px;
+    height: 120px;
+    margin-left: 20px;
+    margin-top: 10px;
   }
   .charts-container {
     display: grid;

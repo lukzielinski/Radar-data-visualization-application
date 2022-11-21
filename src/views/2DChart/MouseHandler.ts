@@ -1,4 +1,4 @@
-import * as canvasCharts from './canavasCharts';
+import * as canvasCharts from './2DChartCanvas';
 
 let canvas: HTMLCanvasElement
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import * as canvasCharts from './canavasCharts';
-  import * as DataType from './DataType';
+  import * as canvasCharts from './2DChartCanvas';
+  import * as DataType from '../FileEditor/DataType';
   import * as MouseHandler from './MouseHandler';
   
   export let readings: DataType.Reading[] = [];

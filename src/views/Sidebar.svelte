@@ -1,101 +1,331 @@
 <script lang="ts">
-  import * as DataType from './Canvas/DataType';
-  import SidebarChart from './Canvas/SibarChart.svelte';
-  export let readings: DataType.Reading[];
+  import * as DataType from './FileEditor/DataType'
+  import Fa from 'svelte-fa/src/fa.svelte'
+  import Dropdown from '../views/AppComponents/Dropdown.svelte'
+  import * as icons from '@fortawesome/free-solid-svg-icons'
+  import  animatecss from 'animate.css'
+  import SidebarChart from './2DChart/SibarChart.svelte'
 
-  export let index = 0;
-
-  let playInterval: Timer;
-  let isSidebarVisible = false;
-
-  function incrementIndex (){
-    index++;
+  export let readings: DataType.Reading[]
+  export let isFileLoaded = false
+  export let index = 0
+  let min = 0
+  let max = 100
+  let value = 0
+  $:if (readings.length > 0) {
+    max = readings[readings.length - 1].tid
   }
 
-  function decrementIndex (){
-    index--;
+  let playInterval: Timer
+  let isSidebarVisible = false
+
+  const maxFileSize = 50 * 1024 * 1024 // 10 MB
+
+  import { createEventDispatcher } from 'svelte'
+
+  const dispatch = createEventDispatcher<{
+    file: File
+  }>()
+
+  let fileInput: HTMLInputElement
+
+  let files: FileList | null = null
+  $: file = files && files[0]
+  let name = ''
+
+  $: console.log(files)
+
+  $: if (file) {
+    dispatch('onFile', { file })
   }
-    
+
+  function getFileSize (file: File | null) {
+    if (!file) {
+      return 0
+    }
+    return file.size
+  }
+
+  $: fileSize = getFileSize(file)
+
+  function incrementIndex () {
+    if (readings.length > 0){
+      value = readings[index].tid
+    }
+    index++
+    console.log(index)
+  }
+
+  function decrementIndex () {
+    index--
+  }
 </script>
 
-{#if readings.length > 0}
-<div class="sidebar">
-    <div class="grid-item">
-        frame:  {readings[index].tid}
+<div class="sidebar-container animate__animated animate__fadeIn">
+  <div class="grid-item header-container">
+    {#if file}
+      <div class="file-name">
+        File name: {file.name}
+      </div>
+    {/if}
+  </div>
+  <div class="grid-item {file ? 'file-content' : 'file-loader'}">
+    {#if !file}
+      <div class="file-load-option-item">
+        <div class="icon">
+          <Fa icon={icons.faFileArrowUp} />
+        </div>
+        <button
+          class="file-loader"
+          on:click={() => {
+            fileInput.click()
+          }}
+        >
+          {file !== null ? file.name : 'Click To Load File'}
+        </button>
+        <input
+          class="file-input"
+          bind:files
+          bind:this={fileInput}
+          placeholder="Select file"
+          type="file"
+          accept=".csv, .dat"
+        />
+      </div>
+    {:else}
+      <div class="grid-item-file" >
+        <!-- <Dropdown/> -->    
+        dropdown
     </div>
-    <div class="grid-item">posX:{readings[index].posX}</div>
-    <div class="grid-item">posY:{readings[index].posY}</div>
-    <div class="grid-item">posZ:{readings[index].posZ}</div>
+      <div class="grid-item-file" >
+      dropdown-content
+    </div>
+      <div class="grid-item-file buttons-section animate__animated animate__fadeIn">
+        <button
+          class="button play"
+          on:click={() => {
+            playInterval = setInterval(incrementIndex, 50)
+          }}
+        >
+            <Fa icon={icons.faPlay} />
+        </button>
+        <button
+          class="button stop"
+          on:click={() => {
+            clearInterval(playInterval)
+          }}
+        >
+        <Fa icon={icons.faStop} />
+        </button>
+        <button
+          class="button forward"
+          on:click={() => {
+            incrementIndex()
+          }}
+        >
+        <Fa icon={icons.faPlus} />
+        </button>
+        <button
+          class="button backward"
+          on:click={() => {
+            decrementIndex()
+          }}
+        >
+        <Fa icon={icons.faMinus} />
+        </button>
+      </div>
+      <div class="grid-item-file animate__animated animate__fadeIn">
+        <input type="range" bind:value {min} {max} />
+      </div>
+    {/if}
+  </div>
+  <div class="grid-item reload-section">
+    {#if file}
+      <button
+        class="file-loader"
+        on:click={() => {
+          fileInput.click()
+        }}
+      >
+        {file !== null ? 'Click To Reload File' : 'SelectFile File'}
+      </button>
+      <input
+        class="file-input"
+        bind:files
+        bind:this={fileInput}
+        placeholder="Select file"
+        type="file"
+        accept=".csv, .dat"
+      />
+    {/if}
+  </div>
+  <!-- <div class="header">
+        File preview
+    </div> -->
 </div>
-<div>
-    <div class='button forward'on:click={() => {incrementIndex()}}>+</div>
-    <div class='button backward' on:click={() => {decrementIndex()}}>-</div>
-    <div class='button play' on:click={() => {playInterval = setInterval(incrementIndex, 50)}}>play</div>
-    <div class='button stop' on:click={() => {clearInterval(playInterval)}}>stop</div>
-</div>
-<div class="showSideBar">
-    <div class='button showSideBarButton' on:click={() => {isSidebarVisible = !isSidebarVisible}}>show</div>
-</div>
-{/if}
-{#if isSidebarVisible}
-    <SidebarChart {readings} {index}/>
-{/if}
+
+
 <style lang="less">
-    .sidebar {
-        position: absolute;
-        font-size: 20px;
-        left:0;
-        bottom: 0px;
-        width: 300px;
-        height: 150px;
-        background-color: #f0f0f0;
-        border-right: 1px solid #e0e0e0;
-        display: grid;
-        grid-template-columns: auto;
-    }
-    .grid-item{
-        border: 1px solid #e1e1e1;
-        background-color: rgba(215, 215, 215, 0);
-    }
-    .button{
+  .sidebar-container {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 1px solid rgb(62, 62, 62);
+    left: 0px;
+    top: 0px;
+    width: 300px;
+    height: 100vh;
+    background-color: #f0f0f0;
+    display: grid;
+    grid-template-rows: 10% auto 10%;
+    border-right: 1px solid rgba(0, 0, 0, 0.153);
+  }
+  .header-container {
     display: flex;
-    align-items: center;
     justify-content: center;
-    &:hover{
-        background-color: rgb(199, 199, 199);
-        color: white;
-        cursor: pointer;
-        transition: 1s;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .file-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    outline: none;
+    border: none;
+    &:hover {
+      cursor: pointer;
     }
+  }
+  .file-content {
+    display: grid;
+    grid-template-rows: 10% auto 10% 10%;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .reload-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .grid-item-file {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+    color: #c0c0c0;
+    &:hover {
+      cursor: pointer;
+      color: #3bb7ffab;
+      transition: 1s;
     }
-    .forward{
-        bottom: 30px;
-        right: 30px;
+  }
+  .file-input {
+    display: none;
+  }
+/* CSS */
+.button {
+  appearance: button;
+  background-color: transparent;
+  background-image: linear-gradient(to bottom, #fff, #f8eedb);
+  border: 0 solid #e5e7eb;
+  border-radius: .5rem;
+  box-sizing: border-box;
+  color: #482307;
+  cursor: pointer;
+  display: flex;
+  font-size: 90%;
+  font-weight: 800;
+  line-height: 24px;
+  margin: 10px;
+  outline: 2px solid transparent;
+  padding: 0.7rem 0.7rem;
+  text-align: center;
+  text-transform: none;
+  transition: all .1s cubic-bezier(.4, 0, .2, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  box-shadow: -6px 8px 10px rgba(81,41,10,0.1),0px 2px 2px rgba(81,41,10,0.2);
+}
+
+.button:active {
+  background-color: #f3f4f6;
+  box-shadow: -1px 2px 5px rgba(81,41,10,0.15),0px 1px 1px rgba(81,41,10,0.15);
+  transform: translateY(0.125rem);
+}
+
+.button:focus {
+  box-shadow: rgba(72, 35, 7, .46) 0 0 0 4px, -6px 8px 10px rgba(81,41,10,0.1), 0px 2px 2px rgba(81,41,10,0.2);
+}
+  .button{
+    &:hover {
+      cursor: pointer;
     }
-    .backward{
-        bottom: 30px;
-        right: 60px;
-    }
-    .play{
-        font-size: 10px;
-        width: 100px;
-        bottom: 30px;
-        right: 90px;
-    }
-    .stop{
-        font-size: 10px;
-        width: 100px;
-        bottom: 30px;
-        right: 190px;
-    }
-    .showSideBarButton{
-        position: absolute;
-        width: 100px;
-        top: 30px;
-        left: 30px;
-    }
+  }
+  input[type='range']:focus {
+    outline: none;
+  }
+  input[type='range'] {
+    -webkit-appearance: none;
+    margin: 18px 0;
+    width: 70%;
+  }
+
+  input[type='range']::-webkit-slider-runnable-track {
+    width: 90%;
+    height: 4.4px;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    background: #f3f4f6;
+    border-radius: 1.3px;
+    border: 0.2px solid #010101;
+  }
+  input[type='range']::-webkit-slider-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 26px;
+    width: 12px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -11px;
+  }
+  input[type='range']:focus::-webkit-slider-runnable-track {
+    background: #e3e3e3;
+  }
+  input[type='range']::-moz-range-track {
+    width: 90%;
+    height: 8.4px;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    background: #0491ae;
+    border-radius: 1.3px;
+    border: 0.2px solid #010101;
+  }
+  input[type='range']::-moz-range-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 36px;
+    width: 16px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+  }
+  input[type='range']::-ms-track {
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    border-width: 16px 0;
+    color: transparent;
+  }
 </style>

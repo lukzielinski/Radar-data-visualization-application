@@ -1,6 +1,6 @@
 <script lang="ts">
-  import * as DataType from './DataType';
-  import * as glCharts from './glChart';
+  import * as DataType from '../FileEditor/DataType';
+  import * as glCharts from './3DChartCanvas';
   import { onMount } from 'svelte';
   // import stream from 'stream'
   // const temp = stream.Transform.prototype

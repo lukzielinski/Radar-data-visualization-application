@@ -1,6 +1,6 @@
 <script lang="ts">
-    import * as glChart from './glChart';
-    import * as DataType from './DataType';
+    import * as glChart from '../3DChart/3DChartCanvas';
+    import * as DataType from '../FileEditor/DataType';
     
     export let readings: DataType.Reading[] = [];
     export let index: number;
