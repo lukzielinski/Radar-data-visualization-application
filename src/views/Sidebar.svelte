@@ -1,13 +1,15 @@
 <script lang="ts">
   import * as DataType from './FileEditor/DataType'
   import Fa from 'svelte-fa/src/fa.svelte'
-  import Dropdown from '../views/AppComponents/Dropdown.svelte'
+  import ScaleComponent from './AppComponents/ScaleComponent.svelte'
   import * as icons from '@fortawesome/free-solid-svg-icons'
   import  animatecss from 'animate.css'
   import SidebarChart from './2DChart/SibarChart.svelte'
 
   export let readings: DataType.Reading[]
   export let isFileLoaded = false
+  export let cords: DataType.CordsType
+
   export let index = 0
   let min = 0
   let max = 100
@@ -98,7 +100,7 @@
         dropdown
     </div>
       <div class="grid-item-file" >
-      dropdown-content
+      <ScaleComponent bind:scale_cords={cords}/>
     </div>
       <div class="grid-item-file buttons-section animate__animated animate__fadeIn">
         <button
@@ -262,7 +264,7 @@
 }
 
 .button:focus {
-  box-shadow: rgba(72, 35, 7, .46) 0 0 0 4px, -6px 8px 10px rgba(81,41,10,0.1), 0px 2px 2px rgba(81,41,10,0.2);
+  box-shadow: rgba(72, 35, 7, .46) 0 0 0 2px, -6px 8px 10px rgba(81,41,10,0.1), 0px 2px 2px rgba(81,41,10,0.2);
 }
   .button{
     &:hover {

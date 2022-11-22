@@ -12,3 +12,9 @@ export interface Reading {
     g: number;
     confidence_level: number;
   }
+
+export interface CordsType {
+    x: number;
+    y: number;
+    z: number;
+}

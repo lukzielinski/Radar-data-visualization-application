@@ -21,17 +21,13 @@
   }
 </script>
 
-<canvas bind:this={canvas} width="2000px" height="2000px" class="canvas" style="height: 76vh; width: 86vh" id="myChart1"></canvas>
+<canvas bind:this={canvas} width="2000px" height="2000px" class="canvas" style="height: 72vh; width: 82vh" id="myChart1"></canvas>
 
 <style lang="less">
 .canvas{
-  width: 1000px;
-  height: 100%;
-  background-color: aliceblue;
-}
-.button{
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 12%;
+  left: 310px;
+  background-color: white;
 }
 </style>

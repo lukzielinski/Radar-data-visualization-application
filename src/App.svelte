@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Router, Route } from 'svelte-routing'
-  import CanvasContainer from './views/2DChart/CanvasContainer.svelte'
+  import CanvasContainer2D from './views/2DChart/CanvasContainer2D.svelte'
   import * as DataType from './views/FileEditor/DataType'
   import logo from './assets/logo-1.png'
   import  animatecss from 'animate.css'
@@ -10,6 +10,10 @@
   
 
   let currentFile: File | null = null;
+  let cords: DataType.CordsType
+  $:if (cords) {
+    console.log(cords)
+  }
   let index: number;
   let blurSite = true;
 
@@ -60,25 +64,27 @@
 </script>
 
 <main>
-  <Sidebar bind:readings={readings} bind:index={index} on:onFile={(e) => { currentFile = e.detail.file; }}/>
+  <Sidebar bind:readings={readings} bind:cords={cords} bind:index={index} on:onFile={(e) => { currentFile = e.detail.file; }}/>
   {#if blurSite}
     <div class="blured"></div>
     <div class="app-header">
       <div class="animate__animated animate__fadeIn animate__delay-1s">People counting tracker analizer</div>
       <img class="logo animate__animated animate__fadeIn animate__delay-2s" src={logo} alt='logo'/>
     </div>
-    {:else}
+    {:else if readings.length > 0}
     <div class="grid-container">
-      <div class="grid-item"></div>  
-      <div class="grid-item"></div>
-      <div class="grid-item"></div>
+      <div class="grid-item">
+        <CanvasContainer2D bind:readings={readings} bind:index={index}/>
+      </div>
+      <div class="grid-item">
+        <CanvasContainer3D bind:readings={readings} bind:index={index} bind:cords={cords}/>
+      </div>
         <!-- <OpenFile on:onFile={(e) => { currentFile = e.detail.file; }}/> -->
       <!-- <div class="grid-item charts-container">
         <div class="chart-item">
           <CanvasContainer bind:readings={readings} bind:index={index}/>
         </div>
         <div class="chart-item">
-          <CanvasContainer3D bind:readings={readings} bind:index={index}/>
         </div>
       </div> -->
     </div>
@@ -88,13 +94,7 @@
 <style lang="less">
   .grid-container { 
     display: grid;
-    grid-template-rows: 10vh 80vh auto;
     grid-gap: 10px;
-  }
-  .grid-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
   .blured {
         display: block;

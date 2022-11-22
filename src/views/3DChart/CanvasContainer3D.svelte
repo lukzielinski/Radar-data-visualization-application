@@ -6,12 +6,9 @@
   // const temp = stream.Transform.prototype
   export let readings: DataType.Reading[] = [];
   export let index: number;
+  export let cords: DataType.CordsType = { x: 0, y: 0, z: 0 };
 
   import Plotly from 'plotly.js/dist/plotly'
-
-  let basePointsX = [ -10, -10, 10, 10 ]
-  let basePointsY = [ -10, 10, -10, 10 ]
-  let basePointsZ = [ 4, 1, 1, 1 ]
 
   type point = {
     x: number,
@@ -23,9 +20,23 @@
   let dataPoints: point[]  = []
 
   let trace1 = {
-    x: [  0, -10, -10, 10, 10 ],
-    y: [ 1, -10, 10, -10, 10 ], 
-    z: [ 0, 1, 0, 0, 0 ],
+    x: [  cords.x, -10, -10, 10, 10 ],
+    y: [ cords.y, -10, 10, -10, 10 ], 
+    z: [ 0, cords.z, 0, 0, 0 ],
+    mode: 'markers',
+    marker: {
+      size: 1,
+      line: {
+        color: 'rgba(217, 217, 217, 0.14)',
+        width: 1 },
+      opacity: 1 },
+    type: 'scatter3d'
+};
+
+let trace2 = {
+    x: [  cords.x, -10, -10, 10, 10 ],
+    y: [ 4, -10, 10, -10, 10 ], 
+    z: [ 0, 0, 0, 0, 0 ],
     mode: 'markers',
     marker: {
       size: 10,
@@ -36,13 +47,15 @@
     type: 'scatter3d'
 };
 
-let data = [ trace1 ];
+let data = [ trace1 , trace2 ];
 let layout = 
-{ 
+{   
+    width: 800,
+    height: 695,
     margin: {
       l: 0,
       r: 0,
-      b: 10,
+      b: 0,
       t: 0
     },
     xaxis: {
@@ -92,6 +105,12 @@ onMount(()=> {
     // }, 10)
 })
 
+$: if (cords) {
+    trace1.x[4] = cords.x;
+    trace1.y[2] = cords.y;
+    trace1.y[3] = cords.y;
+    trace1.z[1] = cords.z;
+  }
   
   $:if (index){
     const reading = readings[index];
@@ -107,15 +126,13 @@ onMount(()=> {
       z: reading.posZ,
       timer: null
     }
-
     dataPoints[objectId].timer = setTimeout(()=>{
       dataPoints = dataPoints.filter(point => point !== dataPoints[objectId])
     }, 100)
-
-    trace1.x = [ ...basePointsX, ...(dataPoints.map(point => point.x)) ]
-    trace1.y = [ ...basePointsY, ...(dataPoints.map(point => point.y)) ]
-    trace1.z = [ ...basePointsZ, ...(dataPoints.map(point => point.z)) ]
-
+    
+    trace2.x = [ ...(dataPoints.map(point => point.x)) ]
+    trace2.y = [ ...(dataPoints.map(point => point.y)) ]
+    trace2.z = [ ...(dataPoints.map(point => point.z)) ]
     Plotly.update('myDiv', data, layout);
   }
 </script>
@@ -124,7 +141,9 @@ onMount(()=> {
 
 <style lang="less">
   .canv3d-container{
-    width: 900px;
+    position: absolute;
+    right: 10px;
+    top: 12%;
   }
 </style>
   
