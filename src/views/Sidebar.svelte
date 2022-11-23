@@ -14,12 +14,12 @@
   let min = 0
   let max = 100
   let value = 0
+  let timeout = 50
   $:if (readings.length > 0) {
-    max = readings[readings.length - 1].tid
+    max = readings.length - 1
   }
 
   let playInterval: Timer
-  let isSidebarVisible = false
 
   const maxFileSize = 50 * 1024 * 1024 // 10 MB
 
@@ -51,15 +51,16 @@
   $: fileSize = getFileSize(file)
 
   function incrementIndex () {
-    if (readings.length > 0){
-      value = readings[index].tid
-    }
     index++
-    console.log(index)
   }
 
   function decrementIndex () {
     index--
+  }
+
+  $: if (value && readings.length > 0) {
+    index = value
+    console.log(readings[index])
   }
 </script>
 
@@ -95,9 +96,14 @@
         />
       </div>
     {:else}
-      <div class="grid-item-file" >
-        <!-- <Dropdown/> -->    
-        dropdown
+      <div class="grid-item-file" >   
+        <div class="scale-container">
+              <div class="input-element">
+                  <button class="button" on:click={() => timeout -= 10} on:click={() => clearInterval(playInterval)}> - </button>
+                  <div class="output">Timestamp: {timeout}</div>
+                  <button class="button"  on:click={() => timeout += 10} on:click={() => clearInterval(playInterval)}> + </button>
+              </div>
+      </div>
     </div>
       <div class="grid-item-file" >
       <ScaleComponent bind:scale_cords={cords}/>
@@ -106,7 +112,7 @@
         <button
           class="button play"
           on:click={() => {
-            playInterval = setInterval(incrementIndex, 50)
+            playInterval = setInterval(incrementIndex, timeout)
           }}
         >
             <Fa icon={icons.faPlay} />
@@ -137,7 +143,7 @@
         </button>
       </div>
       <div class="grid-item-file animate__animated animate__fadeIn">
-        <input type="range" bind:value {min} {max} />
+        <input type="range" bind:value={index} step={1} {min} {max} />
       </div>
     {/if}
   </div>
@@ -161,9 +167,6 @@
       />
     {/if}
   </div>
-  <!-- <div class="header">
-        File preview
-    </div> -->
 </div>
 
 
@@ -198,6 +201,19 @@
       cursor: pointer;
     }
   }
+  .input-element{
+        width: 300px;
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .scale-container{
+        height: 10px;
+        width: 300px;
+        display: grid;
+        grid-template-rows: 25% 50% 25%;
+    }
   .file-content {
     display: grid;
     grid-template-rows: 10% auto 10% 10%;

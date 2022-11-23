@@ -11,9 +11,6 @@
 
   let currentFile: File | null = null;
   let cords: DataType.CordsType
-  $:if (cords) {
-    console.log(cords)
-  }
   let index: number;
   let blurSite = true;
 

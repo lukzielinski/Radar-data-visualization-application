@@ -1,18 +1,18 @@
 <script lang="ts">
 
     let new_cords = {
-      x: -10,
+      x: 10,
       y: 10,
       z: 4,
     }
     export let scale_cords = {
-      x: -10,
+      x: 10,
       y: 10,
       z: 4,
     }
 
     function updatePoints () {
-      scale_cords.x = new_cords.x
+    //   scale_cords.x = new_cords.x
       scale_cords.y = new_cords.y
       scale_cords.z = new_cords.z
     }
@@ -22,22 +22,38 @@
 <div class="scale-container">
     <div class="grid-item">Scale 3D acis</div>
     <div class="grid-item">
-        X: <input  class="input-number" type="number" bind:value={new_cords.x} />
+        <div class="input-element">
+            <button class="button"  on:click={() => scale_cords.x = new_cords.x - 1}  on:click={ () => new_cords.x -= 1}> - </button>
+            <div class="output">X: {new_cords.x}</div>
+            <button class="button" on:click={() => scale_cords.x = new_cords.x + 1}  on:click={ () => new_cords.x += 1}> + </button>
+        </div>
     </div>
     <div class="grid-item">
-        Y: <input  class="input-number" type="number" bind:value={new_cords.y} />
+        <div class="input-element">
+            <button class="button" on:click={() => scale_cords.y = new_cords.y - 1}  on:click={ () => new_cords.y -= 1}> - </button>
+            <div class="output">Y: {new_cords.y}</div>
+            <button class="button" on:click={() => scale_cords.y = new_cords.y + 1}  on:click={ () => new_cords.y += 1}> + </button>
+        </div>
     </div>
     <div class="grid-item">
-        Z: <input class="input-number" type="number" bind:value={new_cords.z} />
-    </div>
-    <div class="grid-item">
-        <button class="button" on:click={updatePoints}>Update</button>
+        <div class="input-element">
+            <button class="button" on:click={() => scale_cords.z = new_cords.z - 1}  on:click={ () => new_cords.z -= 1}> - </button>
+            <div class="output">Z: {new_cords.z}</div>
+            <button class="button" on:click={() => scale_cords.z = new_cords.z + 1}  on:click={ () => new_cords.z += 1}> + </button>
+        </div>
     </div>
 </div>
 
 
 
 <style lang="less">
+    .input-element{
+        width: 300px;
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
     .scale-container{
         height: 350px;
         width: 300px;
@@ -49,6 +65,7 @@
         justify-content: center;
         align-items: center;
     }
+
 .button {
   appearance: button;
   background-color: transparent;
