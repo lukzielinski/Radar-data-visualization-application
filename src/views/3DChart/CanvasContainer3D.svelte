@@ -19,116 +19,92 @@
   
   let dataPoints: point[]  = []
 
-let layout = {
-    autosize: false,
-    width: 500,
-    height: 500,
-    margin: {
-      l: 50,
-      r: 50,
-      b: 100,
-      t: 100,
-      pad: 4
-    },
-    paper_bgcolor: '#7f7f7f',
-    plot_bgcolor: '#c7c7c7'
+  let trace1 = {
+    x: [  cords.x, -10, -10, 10, 10 ],
+    y: [ cords.y, -10, 10, -10, 10 ], 
+    z: [ 0, cords.z, 0, 0, 0 ],
+    mode: 'markers',
+    marker: {
+      size: 1,
+      line: {
+        color: 'rgba(217, 217, 217, 0.14)',
+        width: 1 },
+      opacity: 1 },
+    type: 'scatter3d'
 };
 
-//   let trace1 = {
-//     x: [  cords.x, -10, -10, 10, 10 ],
-//     y: [ cords.y, -10, 10, -10, 10 ], 
-//     z: [ 0, cords.z, 0, 0, 0 ],
-//     mode: 'markers',
-//     marker: {
-//       size: 1,
-//       line: {
-//         color: 'rgba(217, 217, 217, 0.14)',
-//         width: 1 },
-//       opacity: 1 },
-//     type: 'scatter3d'
-// };
+let trace2 = {
+    x: [  cords.x, -10, -10, 10, 10 ],
+    y: [ 4, -10, 10, -10, 10 ], 
+    z: [ 0, 0, 0, 0, 0 ],
+    mode: 'markers',
+    marker: {
+      size: 10,
+      line: {
+        color: 'rgba(217, 217, 217, 0.14)',
+        width: 1 },
+      opacity: 1 },
+    type: 'scatter3d'
+};
 
-// let trace2 = {
-//     x: [  cords.x, -10, -10, 10, 10 ],
-//     y: [ 4, -10, 10, -10, 10 ], 
-//     z: [ 0, 0, 0, 0, 0 ],
-//     mode: 'markers',
-//     marker: {
-//       size: 10,
-//       line: {
-//         color: 'rgba(217, 217, 217, 0.14)',
-//         width: 1 },
-//       opacity: 1 },
-//     type: 'scatter3d'
-// };
-
-// let data = [ trace1 , trace2 ];
-// let layout = 
-// {   
-//     width: 800,
-//     height: 695,
-//     margin: {
-//       l: 0,
-//       r: 0,
-//       b: 0,
-//       t: 0
-//     },
-//     xaxis: {
-//       autorange: false,
-//       range: [ -12, 12 ],
-//       type: 'date'
-//     },
-//     yaxis: {
-//       autorange: false,
-//       range: [ -12, 12 ],
-//       autotick: false,
-//       ticks: 'outside',
-//       tick0: 0,
-//       dtick: 0.25,
-//       ticklen: 8,
-//       tickwidth: 4,
-//       tickcolor: '#000',
-//       type: 'linear'
-//     },
-//     zaxis: {
-//       autorange: false,
-//       autotick: false,
-//       ticks: 'outside',
-//       tick0: 0,
-//       dtick: 0.25,
-//       ticklen: 8,
-//       tickwidth: 4,
-//       tickcolor: '#000',
-//       type: 'linear'
-//     }
-// };
+let data = [ trace1 , trace2 ];
+let layout = 
+{   
+    width: 800,
+    height: 695,
+    margin: {
+      l: 0,
+      r: 0,
+      b: 0,
+      t: 0
+    },
+    xaxis: {
+      autorange: false,
+      range: [ -12, 12 ],
+      type: 'date'
+    },
+    yaxis: {
+      autorange: false,
+      range: [ -12, 12 ],
+      autotick: false,
+      ticks: 'outside',
+      tick0: 0,
+      dtick: 0.25,
+      ticklen: 8,
+      tickwidth: 4,
+      tickcolor: '#000',
+      type: 'linear'
+    },
+    zaxis: {
+      autorange: false,
+      range: [ -12, 12 ],
+      autotick: false,
+      ticks: 'outside',
+      tick0: 0,
+      dtick: 0.25,
+      ticklen: 8,
+      tickwidth: 4,
+      tickcolor: '#000',
+      type: 'linear'
+    }
+};
 
 
 let t = 0;
 
-let data = [
-    {
-      x: [ readings[index].posX, readings[index + 1].posX, readings[index + 2].posX ],
-      y: [ readings[index].posY, readings[index + 1].posY, readings[index + 2].posY ],
-      type: 'scatter'
-    }
-];
 
 onMount(()=> {
     Plotly.newPlot('myDiv', data, layout);
 })
 
+$: if (cords) {
+    trace1.x[4] = cords.x;
+    trace1.y[2] = cords.y;
+    trace1.y[3] = cords.y;
+    trace1.z[1] = cords.z;
+  }
+  
   $:if (index){
-    for (let i = 0; i < 1000; i++) {
-      let data = [
-        {
-          x: [ readings[index].posX, readings[i].posX, readings[i].posX ],
-          y: [ readings[index].posY, readings[i].posY, readings[i].posY ],
-          type: 'scatter'
-        }
-      ];
-    }
-   
     const reading = readings[index];
     const objectId = reading.objectsId;
 
@@ -138,44 +114,18 @@ onMount(()=> {
     dataPoints[objectId] = {
       x: reading.posX,
       y: reading.posY,
+      z: reading.posZ,
       timer: null
     }
     dataPoints[objectId].timer = setTimeout(()=>{
       dataPoints = dataPoints.filter(point => point !== dataPoints[objectId])
     }, 100)
     
-    Plotly.newPlot('myDiv', data, layout);
+    trace2.x = [ ...(dataPoints.map(point => point.x)) ]
+    trace2.y = [ ...(dataPoints.map(point => point.y)) ]
+    trace2.z = [ ...(dataPoints.map(point => point.z)) ]
+    Plotly.update('myDiv', data, layout);
   }
-
-// $: if (cords) {
-//     trace1.x[4] = cords.x;
-//     trace1.y[2] = cords.y;
-//     trace1.y[3] = cords.y;
-//     trace1.z[1] = cords.z;
-//   }
-  
-//   $:if (index){
-//     const reading = readings[index];
-//     const objectId = reading.objectsId;
-
-//     if (dataPoints[objectId]) {
-//       clearTimeout(dataPoints[objectId].timer)
-//     }
-//     dataPoints[objectId] = {
-//       x: reading.posX,
-//       y: reading.posY,
-//       z: reading.posZ,
-//       timer: null
-//     }
-//     dataPoints[objectId].timer = setTimeout(()=>{
-//       dataPoints = dataPoints.filter(point => point !== dataPoints[objectId])
-//     }, 100)
-    
-//     trace2.x = [ ...(dataPoints.map(point => point.x)) ]
-//     trace2.y = [ ...(dataPoints.map(point => point.y)) ]
-//     trace2.z = [ ...(dataPoints.map(point => point.z)) ]
-//     Plotly.update('myDiv', data, layout);
-//   }
 </script>
 
 <div class="canv3d-container" id="myDiv"></div>
