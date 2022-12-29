@@ -3,6 +3,8 @@ import * as DataType from '../FileEditor/DataType'
 let canvas: HTMLCanvasElement
 let ctx: CanvasRenderingContext2D
 let currentPointIndex = 0
+let downPointsIndex = 0
+
 const readingsUpdated: DataType.Reading[] = []
 const gridSpacing = 50
 const maxZoom = 20
@@ -31,17 +33,16 @@ function draw (){
   ctx.scale(cameraZoom, cameraZoom)
   ctx.translate(-canvas.width / 2, -canvas.height / 2)
   ctx.clearRect(0, 0, canvas.width, canvas.height)
-  convertTimeStamp()
   drawBackground();
   drawPoints ()
   ctx.restore()
 }
 
-function convertTimeStamp (){
-  if (readingsUpdated.length > 0){
-    const newTimeInMicroseconds = ((readingsUpdated[currentPointIndex].tid - readingsUpdated[0].tid) * 0.12) / 86400;
-  }
-}
+// function convertTimeStamp (){
+//   if (readingsUpdated.length > 0){
+//     const newTimeInMicroseconds = ((readingsUpdated[currentPointIndex].tid - readingsUpdated[0].tid) * 0.12) / 86400;
+//   }
+// }
 
 function drawPoints () {
   const center = {
@@ -59,7 +60,8 @@ function drawPoints () {
     ctx.stroke()
     ctx.fill()
     ctx.closePath()
-    for (let i = 0; i < currentPointIndex; i++){
+
+    for (let i = downPointsIndex; i < currentPointIndex; i++){
       if (readingsUpdated[currentPointIndex].objectsId === readingsUpdated[currentPointIndex + 1].objectsId){
         ctx.beginPath()
         // ctx.fillStyle = '#e5e5e5'
@@ -71,19 +73,28 @@ function drawPoints () {
           center.y + readingsUpdated[currentPointIndex].posY * - 80
         )
         ctx.fill()
-        ctx.fillStyle = '#e5e5e5'
         ctx.beginPath()
-        ctx.fillStyle = '#a9def9'
-        ctx.arc(center.x + readingsUpdated[currentPointIndex].posX * 100, center.y + readingsUpdated[currentPointIndex].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-        ctx.closePath()
+        if (readingsUpdated[currentPointIndex].objectsId === 19){
+          ctx.fillStyle = '#e5e5e5'
+          ctx.fillStyle = '#a9def9'
+        }
         ctx.beginPath()
-        ctx.fillStyle = '#caf0f8'
-        ctx.arc(center.x + readingsUpdated[currentPointIndex - i - 1].posX * 100, center.y + readingsUpdated[currentPointIndex - i - 1].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-        ctx.stroke()
-        ctx.fill()
-        ctx.closePath()
-        drawLineForPoints()
+        for (let k = 0 ; k < 1 ; k++){
+          console.log('halo')
+          ctx.beginPath()
+          ctx.arc(center.x + readingsUpdated[currentPointIndex].posX * 100, center.y + readingsUpdated[currentPointIndex].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
+          ctx.fill()
+          ctx.stroke()
+          ctx.closePath()
+          ctx.beginPath()
+          ctx.arc(center.x + readingsUpdated[currentPointIndex - k].posX * 100, center.y + readingsUpdated[currentPointIndex - k].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
+          ctx.fill()
+          ctx.stroke()  
+          ctx.closePath()
+          drawLineForPoints()
+        }
       } else {
+        ctx.closePath()
         drawManyPoints()
       }
     }
@@ -105,7 +116,9 @@ function drawPoints () {
         center.y + readingsUpdated[currentPointIndex + i].posY * - 80
       )
       ctx.fill()
-      ctx.fillStyle = '#a9def9'
+      ctx.closePath()
+      ctx.beginPath()
+      // ctx.fillStyle = '#a9def9'
       ctx.arc(center.x + readingsUpdated[currentPointIndex + i].posX * 100, center.y + readingsUpdated[currentPointIndex + i].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
       ctx.stroke()
       ctx.fill()
@@ -114,23 +127,24 @@ function drawPoints () {
   }
 
   function drawLineForPoints (){
-    if (currentPointIndex  > 16){
-      for (let j = 16; j > 0; j--){
+    let newAddition = downPointsIndex 
+    if (readingsUpdated[currentPointIndex].objectId === readingsUpdated[currentPointIndex + 1].objectId){
+      for (let j = currentPointIndex; j > downPointsIndex; j--){
         ctx.beginPath()
-        ctx.moveTo(center.x + readingsUpdated[currentPointIndex - j].posX * 100, center.y + readingsUpdated[currentPointIndex - j].posY * - 100)
-        ctx.lineTo(center.x + readingsUpdated[currentPointIndex - j + 1].posX * 100, center.y + readingsUpdated[currentPointIndex - j + 1].posY * - 100)
+        ctx.moveTo(center.x + readingsUpdated[newAddition + 1].posX * 100, center.y + readingsUpdated[newAddition + 1].posY * - 100)
+        ctx.lineTo(center.x + readingsUpdated[newAddition + 2].posX * 100, center.y + readingsUpdated[newAddition + 2].posY * - 100)
+        newAddition++
         ctx.strokeStyle = '#e9c46a';
         ctx.stroke();
       } 
       ctx.closePath()
-    } else {
-      for ( let j = 1; j < currentPointIndex - 1; j++){
-        ctx.beginPath()
-        ctx.moveTo(center.x + readingsUpdated[currentPointIndex - j].posX * 100, center.y + readingsUpdated[currentPointIndex - j].posY * - 100)
-        ctx.lineTo(center.x + readingsUpdated[currentPointIndex - j - 1].posX * 100, center.y + readingsUpdated[currentPointIndex - j - 1].posY * - 100)
-        ctx.strokeStyle = '#e9c46a';
-        ctx.stroke();
-      }
+    } 
+    else {
+      downPointsIndex = currentPointIndex
+      newAddition = currentPointIndex
+      console.log(downPointsIndex)
+      console.log('nowy punkt')
+      ctx.closePath()
     }
     ctx.stroke()
     ctx.fill()

@@ -6,17 +6,16 @@
     }>()
     
     let fileInput: HTMLInputElement
-
     let files: FileList | null = null
     $: file = files && files[0]
-    let name = ''
-
-    $: console.log(files);
 
     $: if (file) {
       dispatch('onFile', { file })
     }
+
+    let name = ''
     
+    $: console.log(files);
     function getFileSize (file: File | null) {
       if (!file) { return 0; }
       return file.size;

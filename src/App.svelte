@@ -30,7 +30,6 @@
 
     fileText.split('\n').forEach((line) => {
       const numbers: number[] = [];
-
       line.split(';').forEach((digitString) => {
         const digit = parseFloat(digitString); 
         numbers.push(digit);
@@ -77,13 +76,6 @@
         <CanvasContainer3D bind:readings={readings} bind:index={index} bind:cords={cords}/>
       </div>
         <!-- <OpenFile on:onFile={(e) => { currentFile = e.detail.file; }}/> -->
-      <!-- <div class="grid-item charts-container">
-        <div class="chart-item">
-          <CanvasContainer bind:readings={readings} bind:index={index}/>
-        </div>
-        <div class="chart-item">
-        </div>
-      </div> -->
     </div>
   {/if}
 </main>

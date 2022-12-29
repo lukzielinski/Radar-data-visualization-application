@@ -7,6 +7,7 @@
   export let index: number;
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
+  let firstTid = readings[0].tid;
 
   $:if (canvas) {
     canvasCharts.updateReadings(readings);
@@ -15,6 +16,7 @@
     ctx = ctxCandidate;
     index = 1;
   }
+
   $:if (index){
     MouseHandler.init(canvas);
     canvasCharts.initCharts(canvas,index);

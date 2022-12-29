@@ -107,7 +107,7 @@ $: if (cords) {
   $:if (index){
     const reading = readings[index];
     const objectId = reading.objectsId;
-
+    
     if (dataPoints[objectId]) {
       clearTimeout(dataPoints[objectId].timer)
     }

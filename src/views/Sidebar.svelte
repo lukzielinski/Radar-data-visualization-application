@@ -28,14 +28,15 @@
   const dispatch = createEventDispatcher<{
     file: File
   }>()
-
-  let fileInput: HTMLInputElement
-
-  let files: FileList | null = null
-  $: file = files && files[0]
   let name = ''
 
   $: console.log(files)
+
+
+  let fileInput: HTMLInputElement
+  let files: FileList | null = null
+  
+  $: file = files && files[0]
 
   $: if (file) {
     dispatch('onFile', { file })
@@ -60,7 +61,7 @@
 
   $: if (value && readings.length > 0) {
     index = value
-    console.log(readings[index])
+    console.log(index)
   }
 </script>
 
