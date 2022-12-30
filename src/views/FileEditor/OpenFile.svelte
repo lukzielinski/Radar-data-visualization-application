@@ -7,6 +7,7 @@
     
     let fileInput: HTMLInputElement
     let files: FileList | null = null
+    
     $: file = files && files[0]
 
     $: if (file) {

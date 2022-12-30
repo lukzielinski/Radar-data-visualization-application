@@ -50,9 +50,7 @@
           g: numbers[10],
           confidence_level: numbers[11]
         }
-
         readings.push(reading);
-
       }
     });
     console.log(readings);

@@ -5,17 +5,12 @@
       y: 10,
       z: 4,
     }
+    
     export let scale_cords = {
       x: 10,
       y: 10,
       z: 4,
     }
-
-    // function updatePoints () {
-    //   scale_cords.x = new_cords.x
-    //   scale_cords.y = new_cords.y
-    //   scale_cords.z = new_cords.z
-    // }
 </script>
 
 
