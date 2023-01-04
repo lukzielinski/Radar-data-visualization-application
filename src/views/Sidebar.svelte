@@ -13,7 +13,6 @@
   export let index = 0
   let min = 0
   let max = 100
-  let value = 0
   let timeout = 50
   $:if (readings.length > 0) {
     max = readings.length - 1
@@ -57,11 +56,6 @@
 
   function decrementIndex () {
     index--
-  }
-
-  $: if (value && readings.length > 0) {
-    index = value
-    console.log(index)
   }
 </script>
 

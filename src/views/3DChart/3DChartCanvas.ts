@@ -3,31 +3,26 @@ import * as DataType from '../FileEditor/DataType';
 import Plotly from 'plotly.js/dist/plotly'
 
 let currentPointIndex = 0
-let color: string
 
-const objectIdArray: number[] = []
-const colors: string[] = []
+
 const a = []; 
 const b = []; 
 const c = [];
 
+const colors: Map<number, string> = new Map()
+
+function getRandomColor () {
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`
+}
+
 export function checkColor (objectId: number) {
-  let isObject = false
-  for (let i = 0; i < objectIdArray.length; i++) {
-    if (objectIdArray[i] === objectId) {
-      color = colors[i]
-      isObject = true
-      break
-    }
-  }
-  if (isObject) {
-    color = colors[objectIdArray.indexOf(objectId)]
+  if (colors.has(objectId)) {
+    return colors.get(objectId)!
   } else {
-    objectIdArray.push(objectId)
-    color = `#${Math.floor(Math.random() * 16777215).toString(16)}`
-    colors.push(color)
+    const color = getRandomColor()
+    colors.set(objectId, color)
+    return color
   }
-  return color
 }
 
 

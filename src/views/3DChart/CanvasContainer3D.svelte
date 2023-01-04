@@ -1,73 +1,115 @@
 <script lang="ts">
-  import * as DataType from '../FileEditor/DataType';
-  import * as glCharts from './3DChartCanvas';
-  import { onMount } from 'svelte';
+  import * as DataType from '../FileEditor/DataType'
+  import * as glCharts from './3DChartCanvas'
+  import { onMount } from 'svelte'
   // import stream from 'stream'
   // const temp = stream.Transform.prototype
-  export let readings: DataType.Reading[] = [];
-  export let index: number;
-  export let cords: DataType.CordsType = { x: 0, y: 0, z: 0 };
+  export let readings: DataType.Reading[] = []
+  export let index: number
+  export let cords: DataType.CordsType = { x: 0, y: 0, z: 0 }
 
   import Plotly from 'plotly.js/dist/plotly'
+  import { timer, type Timer } from 'd3'
 
-  let color:string
+  let color: string
 
   $: if (index) {
     color = glCharts.checkColor(readings[index].objectId)
   }
 
   type point = {
-    x: number,
-    y: number,
-    z: number,
-    timer: Timeout | null
+    x: number
+    y: number
+    z: number
   }
-  
-  let dataPoints: point[]  = []
 
-  let trace1 = {
-    x: [  cords.x, -10, -10, 10, 10 ],
-    y: [ cords.y, -10, 10, -10, 10 ], 
+  let dataPoints: point[] = []
+
+  let keepDimensionsTrace = {
+    x: [ cords.x, -10, -10, 10, 10 ],
+    y: [ cords.y, -10, 10, -10, 10 ],
     z: [ 0, cords.z, 0, 0, 0 ],
     mode: 'markers',
     marker: {
       size: 1,
       line: {
         color: color,
-        width: 1 },
-      opacity: 1 },
-    type: 'scatter3d'
-};
+        width: 1,
+      },
+      opacity: 0,
+      color: color
+    },
+    type: 'scatter3d',
+  }
 
-let trace2 = {
-    x: [  cords.x, -10, -10, 10, 10 ],
-    y: [ 4, -10, 10, -10, 10 ], 
-    z: [ 0, 0, 0, 0, 0 ],
-    mode: 'markers',
+  type Trace = {
+    x: number[]
+    y: number[]
+    z: number[]
+    mode: string
     marker: {
-      size: 10,
+      size: number
       line: {
-        color: color,
-        width: 1 },
-      opacity: 1 },
-    type: 'scatter3d'
-};
+        color: string
+        width: number
+      }
+      color: string
+      opacity: number
+    }
+    type: string,
+    timer: NodeJS.Timeout | null,
+    resetTimer: () => void
+  }
 
-let data = [ trace1 , trace2 ];
-let layout = 
-{   
+  function createTrace (): Trace {
+    return {
+      x: [ ],
+      y: [ ],
+      z: [ ],
+      mode: 'lines+markers',
+      marker: {
+        size: 5,
+        line: {
+          color: '#000000',
+          width: 1,
+        },
+        color: '#000000',
+        opacity: 1,
+      },
+      type: 'scatter3d',
+      timer: null,
+      resetTimer: function () {
+        if (this.timer) {
+          clearTimeout(this.timer)
+        }
+        this.timer = setTimeout(() => {
+          this.x = [ ]
+          this.y = [ ]
+          this.z = [ ]
+        }, 1000)
+      }
+
+    }
+  }
+
+  // maps object id to trace
+  let traces: Map<number, Trace> = new Map()
+
+  let data = [ keepDimensionsTrace, ...traces ]
+
+  let layout = {
     width: 800,
     height: 695,
     margin: {
       l: 0,
       r: 0,
       b: 0,
-      t: 0
+      t: 0,
     },
     xaxis: {
       autorange: false,
       range: [ -12, 12 ],
-      type: 'date'
+      type: 'date',
     },
     yaxis: {
       autorange: false,
@@ -79,7 +121,7 @@ let layout =
       ticklen: 8,
       tickwidth: 4,
       tickcolor: color,
-      type: 'linear'
+      type: 'linear',
     },
     zaxis: {
       autorange: false,
@@ -91,55 +133,63 @@ let layout =
       ticklen: 8,
       tickwidth: 4,
       tickcolor: '#000',
-      type: 'linear'
-    }
-};
-
-let t = 0;
-
-
-onMount(()=> {
-    Plotly.newPlot('myDiv', data, layout);
-})
-
-$: if (cords) {
-    trace1.x[4] = cords.x;
-    trace1.y[2] = cords.y;
-    trace1.y[3] = cords.y;
-    trace1.z[1] = cords.z;
+      type: 'linear',
+    },
   }
-  
-  $:if (index){
-    const reading = readings[index];
-    const objectId = reading.objectsId;
-    
-    if (dataPoints[objectId]) {
-      clearTimeout(dataPoints[objectId].timer)
+
+
+  onMount(() => {
+    Plotly.newPlot('myDiv', data, layout)
+  })
+
+  // keep dimensions trace in sync, changes when user presses the buttons
+  $: if (cords) {
+    keepDimensionsTrace.x[4] = cords.x
+    keepDimensionsTrace.y[2] = cords.y
+    keepDimensionsTrace.y[3] = cords.y
+    keepDimensionsTrace.z[1] = cords.z
+  }
+
+  // drawing loop
+  $: if (index) {
+    const reading = readings[index]
+    const objectId = reading.objectId
+
+    if (!traces.has(objectId)) {
+      const trace = createTrace()
+      traces.set(objectId, trace)
+      trace.marker.color = glCharts.checkColor(objectId)
+      // trace.marker.line.color = glCharts.checkColor(objectId)
     }
-    dataPoints[objectId] = {
-      x: reading.posX,
-      y: reading.posY,
-      z: reading.posZ,
-      timer: null
+
+    const trace = traces.get(objectId)!
+    trace.resetTimer()
+
+    trace.x = [ ...trace.x, reading.posX ]
+    trace.y = [ ...trace.y, reading.posY ]
+    trace.z = [ ...trace.z, reading.posZ ]
+
+    // remove elements from the beginning of the array
+    // to make sure that length <= 10
+    if (trace.x.length > 10) {
+      trace.x.shift()
+      trace.y.shift()
+      trace.z.shift()
     }
-    dataPoints[objectId].timer = setTimeout(()=>{
-      dataPoints = dataPoints.filter(point => point !== dataPoints[objectId])
-    }, 100)
     
-    trace2.x = [ ...(dataPoints.map(point => point.x)) ]
-    trace2.y = [ ...(dataPoints.map(point => point.y)) ]
-    trace2.z = [ ...(dataPoints.map(point => point.z)) ]
-    Plotly.update('myDiv', data, layout);
+    data.length = 1;
+    data.push(...traces.values())
+    
+    Plotly.update('myDiv', data, layout)
   }
 </script>
 
-<div class="canv3d-container" id="myDiv"></div>
+<div class="canv3d-container" id="myDiv" />
 
 <style lang="less">
-  .canv3d-container{
+  .canv3d-container {
     position: absolute;
     right: 10px;
     top: 12%;
   }
 </style>
-  
