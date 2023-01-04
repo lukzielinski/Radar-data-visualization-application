@@ -3,19 +3,21 @@ import * as DataType from '../FileEditor/DataType'
 let canvas: HTMLCanvasElement
 let ctx: CanvasRenderingContext2D
 let currentPointIndex = 0
-let downPointsIndex = 0
+const downPointsIndex = 0
 let color: string
+
+const numbersOfPoints = 0
 const objectIdArray: number[] = []
 const colors: string[] = []
-
 const ghostPoints: DataType.Reading[] = []
 const readingsUpdated: DataType.Reading[] = []
+const pointsOnScreen: DataType.Reading[] = []
 const gridSpacing = 50
 const maxZoom = 20
-
-export let cameraZoom = 2
 const scrollSensitivity = 0.003
 const minZoom = 1
+
+export let cameraZoom = 2
 
 export function initCharts (canvasElement: HTMLCanvasElement, index: number) {
   canvas = canvasElement
@@ -58,7 +60,7 @@ function drawPoint () {
     ctx.stroke()
     ctx.fill()
     ctx.closePath()
-    if ((readingsUpdated[currentPointIndex].tid !== readingsUpdated[currentPointIndex + 1].tid ) && readingsUpdated[currentPointIndex].tid !== readingsUpdated[currentPointIndex - 1].tid ){
+    if ((readingsUpdated[currentPointIndex].tid !== readingsUpdated[currentPointIndex + 1].tid) && readingsUpdated[currentPointIndex].tid !== readingsUpdated[currentPointIndex - 1].tid) {
       ctx.beginPath()
       ctx.fill()
       ctx.fillStyle = '#000000'
@@ -85,8 +87,9 @@ function drawPoint () {
 
 
   function drawManyPoints () {
-    for (let i = 1; i < readingsUpdated.length; i++){
-      if (readingsUpdated[currentPointIndex].tid === readingsUpdated[currentPointIndex + i].tid){
+    for (let i = 1; i < readingsUpdated.length; i++) {
+      if (readingsUpdated[currentPointIndex].tid === readingsUpdated[currentPointIndex + i].tid) {
+        drawGhostPoints()
         checkColor(readingsUpdated[currentPointIndex].objectId)
         ctx.beginPath()
         ctx.arc(center.x + readingsUpdated[currentPointIndex + i].posX * 100, center.y + readingsUpdated[currentPointIndex + i].posY * - 100, 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
@@ -113,8 +116,8 @@ function drawPoint () {
     }
   }
 
-  function drawGhostPoints (){
-    for (let i = 0; i < ghostPoints.length; i++){
+  function drawGhostPoints () {
+    for (let i = 0; i < ghostPoints.length; i++) {
       checkColor(ghostPoints[i].objectId)
       ctx.beginPath()
       ctx.fillStyle = color
@@ -125,59 +128,10 @@ function drawPoint () {
     }
     setTimeout(() => {
       ghostPoints.shift()
+      pointsOnScreen.shift()
     }, 1000)
+    drawBackLines()
   }
-
-  // function drawPoints () {
-  //   const center = {
-  //     x: canvas.width / 2,
-  //     y: canvas.height / 2,
-  //   }
-  //   const fontSize = 60 * (1.05 / cameraZoom)
-  //   ctx.lineWidth = 5 * (1.25 / cameraZoom)
-  //   if (readingsUpdated.length > 0){
-  //     const scaledX = Math.round(readingsUpdated[currentPointIndex].posX * 100)
-  //     const scaledY = Math.round(readingsUpdated[currentPointIndex].posY * 100)
-  //     ctx.beginPath()
-  //     ctx.font = `${fontSize}px bold`
-  //     ctx.fillStyle = '#e5e5e5'
-  //     ctx.stroke()
-  //     ctx.fill()
-  //     ctx.closePath()
-  //     for (let i = downPointsIndex; i < currentPointIndex; i++){
-  //       if (readingsUpdated[currentPointIndex].objectsId === readingsUpdated[currentPointIndex + 1].objectsId){
-  //         ctx.beginPath()
-  //         ctx.fill()
-  //         ctx.fillStyle = '#000000'
-  //         ctx.fillText(
-  //           `P${readingsUpdated[currentPointIndex].objectsId} (${scaledX / 100},${scaledY / 100})`,
-  //           center.x + readingsUpdated[currentPointIndex].posX * 110,
-  //           center.y + readingsUpdated[currentPointIndex].posY * - 80
-  //         )
-  //         ctx.fill()
-  //         ctx.beginPath()
-  //         checkColor(readingsUpdated[currentPointIndex].objectId)
-  //         ctx.fillStyle = color
-  //         ctx.beginPath()
-  //         for (let k = 0 ; k < 1 ; k++){
-  //           ctx.beginPath()
-  //           ctx.arc(center.x + readingsUpdated[currentPointIndex].posX * 100, center.y + readingsUpdated[currentPointIndex].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-  //           ctx.fill()
-  //           ctx.stroke()
-  //           ctx.closePath()
-  //           ctx.beginPath()
-  //           ctx.arc(center.x + readingsUpdated[currentPointIndex - k].posX * 100, center.y + readingsUpdated[currentPointIndex - k].posY * - 100 , 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-  //           ctx.fill()
-  //           ctx.stroke()  
-  //           ctx.closePath()
-  //           // drawLineForPoints()
-  //         }
-  //       } else {
-  //         ctx.closePath()
-  //         // drawManyPoints()
-  //       }
-  //     }
-  //   }
 
   function checkColor (objectId: number) {
     let isObject = false
@@ -197,57 +151,79 @@ function drawPoint () {
     }
   }
 
-  // function drawManyPoints () {
-  //   let pointsElements = 0
-  //   while (readingsUpdated[currentPointIndex + pointsElements].objectsId - readingsUpdated[currentPointIndex + pointsElements + 1].objectsId < 0) {
-  //     pointsElements++;
-  //   }
-  //   for (let i = 0; i < pointsElements + 1; i++) {
-  //     const scaledX = Math.round(readingsUpdated[currentPointIndex].posX * 100)
-  //     const scaledY = Math.round(readingsUpdated[currentPointIndex].posY * 100)
-  //     ctx.beginPath()
-  //     ctx.fillStyle = '#22223b'
-  //     ctx.fillText(
-  //       `P${readingsUpdated[currentPointIndex + i].objectsId} (${scaledX / 100},${scaledY / 100})`,
-  //       center.x + readingsUpdated[currentPointIndex + i].posX * 110,
-  //       center.y + readingsUpdated[currentPointIndex + i].posY * - 80
-  //     )
-  //     ctx.fill()
-  //     ctx.closePath()
-  //     ctx.beginPath()
-  //     // ctx.fillStyle = '#a9def9'
-  //     ctx.arc(center.x + readingsUpdated[currentPointIndex + i].posX * 100, center.y + readingsUpdated[currentPointIndex + i].posY * - 100, 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-  //     ctx.stroke()
-  //     ctx.fill()
-  //     ctx.closePath()
-  //   }
-  // }
-
-  function drawLineForPoints () {
-    let newAddition = downPointsIndex
-    if (readingsUpdated[currentPointIndex].objectId === readingsUpdated[currentPointIndex + 1].objectId) {
-      for (let j = currentPointIndex; j > downPointsIndex; j--) {
+  function drawBackLines () {
+    const center = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+    }
+    for (let i = 1; i < ghostPoints.length; i++) {
+      if (ghostPoints[i].objectId === ghostPoints[i - 1].objectId) {
+        checkColor(ghostPoints[i].objectId)
         ctx.beginPath()
-        ctx.moveTo(center.x + readingsUpdated[newAddition + 1].posX * 100, center.y + readingsUpdated[newAddition + 1].posY * - 100)
-        ctx.lineTo(center.x + readingsUpdated[newAddition + 2].posX * 100, center.y + readingsUpdated[newAddition + 2].posY * - 100)
-        newAddition++
-        ctx.strokeStyle = '#e9c46a';
-        ctx.stroke();
+        ctx.fillStyle = color
+        ctx.moveTo(center.x + ghostPoints[i - 1].posX * 100, center.y + ghostPoints[i - 1].posY * - 100)
+        ctx.lineTo(center.x + ghostPoints[i].posX * 100, center.y + ghostPoints[i].posY * - 100)
+        ctx.fill()
+        ctx.stroke()
+        ctx.closePath()
+      } else {
+        break
       }
-      ctx.closePath()
     }
-    else {
-      downPointsIndex = currentPointIndex
-      newAddition = currentPointIndex
-      console.log(downPointsIndex)
-      console.log('nowy punkt')
-      ctx.closePath()
-    }
-    ctx.stroke()
-    ctx.fill()
-    ctx.closePath()
   }
 }
+
+// function drawManyPoints () {
+//   let pointsElements = 0
+//   while (readingsUpdated[currentPointIndex + pointsElements].objectsId - readingsUpdated[currentPointIndex + pointsElements + 1].objectsId < 0) {
+//     pointsElements++;
+//   }
+//   for (let i = 0; i < pointsElements + 1; i++) {
+//     const scaledX = Math.round(readingsUpdated[currentPointIndex].posX * 100)
+//     const scaledY = Math.round(readingsUpdated[currentPointIndex].posY * 100)
+//     ctx.beginPath()
+//     ctx.fillStyle = '#22223b'
+//     ctx.fillText(
+//       `P${readingsUpdated[currentPointIndex + i].objectsId} (${scaledX / 100},${scaledY / 100})`,
+//       center.x + readingsUpdated[currentPointIndex + i].posX * 110,
+//       center.y + readingsUpdated[currentPointIndex + i].posY * - 80
+//     )
+//     ctx.fill()
+//     ctx.closePath()
+//     ctx.beginPath()
+//     // ctx.fillStyle = '#a9def9'
+//     ctx.arc(center.x + readingsUpdated[currentPointIndex + i].posX * 100, center.y + readingsUpdated[currentPointIndex + i].posY * - 100, 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
+//     ctx.stroke()
+//     ctx.fill()
+//     ctx.closePath()
+//   }
+// }
+
+//   function drawBackLines () {
+//     let newAddition = downPointsIndex
+//     if (readingsUpdated[currentPointIndex].objectId === readingsUpdated[currentPointIndex + 1].objectId) {
+//       for (let j = currentPointIndex; j > downPointsIndex; j--) {
+//         ctx.beginPath()
+//         ctx.moveTo(center.x + readingsUpdated[newAddition + 1].posX * 100, center.y + readingsUpdated[newAddition + 1].posY * - 100)
+//         ctx.lineTo(center.x + readingsUpdated[newAddition + 2].posX * 100, center.y + readingsUpdated[newAddition + 2].posY * - 100)
+//         newAddition++
+//         ctx.strokeStyle = '#e9c46a';
+//         ctx.stroke();
+//       }
+//       ctx.closePath()
+//     }
+//     else {
+//       downPointsIndex = currentPointIndex
+//       newAddition = currentPointIndex
+//       console.log(downPointsIndex)
+//       console.log('nowy punkt')
+//       ctx.closePath()
+//     }
+//     ctx.stroke()
+//     ctx.fill()
+//     ctx.closePath()
+//   }
+// }
 
 export function adjustZoom (e: WheelEvent) {
   const zoomAmount = e.deltaY * scrollSensitivity
