@@ -159,32 +159,6 @@ function drawPoint () {
   }
 }
 
-// function drawManyPoints () {
-//   let pointsElements = 0
-//   while (readingsUpdated[currentPointIndex + pointsElements].objectsId - readingsUpdated[currentPointIndex + pointsElements + 1].objectsId < 0) {
-//     pointsElements++;
-//   }
-//   for (let i = 0; i < pointsElements + 1; i++) {
-//     const scaledX = Math.round(readingsUpdated[currentPointIndex].posX * 100)
-//     const scaledY = Math.round(readingsUpdated[currentPointIndex].posY * 100)
-//     ctx.beginPath()
-//     ctx.fillStyle = '#22223b'
-//     ctx.fillText(
-//       `P${readingsUpdated[currentPointIndex + i].objectsId} (${scaledX / 100},${scaledY / 100})`,
-//       center.x + readingsUpdated[currentPointIndex + i].posX * 110,
-//       center.y + readingsUpdated[currentPointIndex + i].posY * - 80
-//     )
-//     ctx.fill()
-//     ctx.closePath()
-//     ctx.beginPath()
-//     // ctx.fillStyle = '#a9def9'
-//     ctx.arc(center.x + readingsUpdated[currentPointIndex + i].posX * 100, center.y + readingsUpdated[currentPointIndex + i].posY * - 100, 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-//     ctx.stroke()
-//     ctx.fill()
-//     ctx.closePath()
-//   }
-// }
-
 export function adjustZoom (e: WheelEvent) {
   const zoomAmount = e.deltaY * scrollSensitivity
   if (zoomAmount) {

@@ -96,8 +96,6 @@ let layout =
     }
 };
 
-let t = 0;
-
 
 onMount(()=> {
     Plotly.newPlot('myDiv', data, layout);

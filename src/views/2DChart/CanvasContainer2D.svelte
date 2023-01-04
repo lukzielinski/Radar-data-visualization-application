@@ -7,7 +7,6 @@
   export let index: number;
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
-  let firstTid = readings[0].tid;
 
   $:if (canvas) {
     canvasCharts.updateReadings(readings);
