@@ -48,5 +48,5 @@ export function drawChart (index: number) {
 }
 
 function draw () {
-
+  console.log()
 }

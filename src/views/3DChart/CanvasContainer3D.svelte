@@ -10,10 +10,11 @@
 
   import Plotly from 'plotly.js/dist/plotly'
 
-  let color:string
+  let color = 'red'
 
   $: if (index) {
     color = glCharts.checkColor(readings[index].objectId)
+    console.log(color)
   }
 
   type point = {
