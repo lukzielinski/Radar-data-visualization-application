@@ -10,6 +10,12 @@
 
   import Plotly from 'plotly.js/dist/plotly'
 
+  let color:string
+
+  $: if (index) {
+    color = glCharts.checkColor(readings[index].objectId)
+  }
+
   type point = {
     x: number,
     y: number,
@@ -27,7 +33,7 @@
     marker: {
       size: 1,
       line: {
-        color: 'rgba(217, 217, 217, 0.14)',
+        color: color,
         width: 1 },
       opacity: 1 },
     type: 'scatter3d'
@@ -41,7 +47,7 @@ let trace2 = {
     marker: {
       size: 10,
       line: {
-        color: 'rgba(217, 217, 217, 0.14)',
+        color: color,
         width: 1 },
       opacity: 1 },
     type: 'scatter3d'
@@ -72,7 +78,7 @@ let layout =
       dtick: 0.25,
       ticklen: 8,
       tickwidth: 4,
-      tickcolor: '#000',
+      tickcolor: color,
       type: 'linear'
     },
     zaxis: {
@@ -88,7 +94,6 @@ let layout =
       type: 'linear'
     }
 };
-
 
 let t = 0;
 

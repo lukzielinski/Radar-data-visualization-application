@@ -103,7 +103,6 @@ function drawPoint () {
 
   function drawGhostPoints () {
     for (let i = 0; i < ghostPoints.length; i++) {
-      console.log(ghostPoints)
       checkColor(ghostPoints[i].objectId)
       ctx.beginPath()
       ctx.fillStyle = color
