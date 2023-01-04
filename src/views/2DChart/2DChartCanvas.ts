@@ -3,10 +3,8 @@ import * as DataType from '../FileEditor/DataType'
 let canvas: HTMLCanvasElement
 let ctx: CanvasRenderingContext2D
 let currentPointIndex = 0
-const downPointsIndex = 0
 let color: string
 
-const numbersOfPoints = 0
 const objectIdArray: number[] = []
 const colors: string[] = []
 const ghostPoints: DataType.Reading[] = []
@@ -77,7 +75,10 @@ function drawPoint () {
       ctx.fillStyle = color
       ctx.beginPath()
       ctx.arc(center.x + readingsUpdated[currentPointIndex].posX * 100, center.y + readingsUpdated[currentPointIndex].posY * - 100, 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
+      ctx.fillStyle = color
+      ctx.fill()
     } else {
+      ghostPoints.push(readingsUpdated[currentPointIndex])
       drawManyPoints()
     }
     ctx.fill()
@@ -87,37 +88,22 @@ function drawPoint () {
 
 
   function drawManyPoints () {
-    for (let i = 1; i < readingsUpdated.length; i++) {
-      if (readingsUpdated[currentPointIndex].tid === readingsUpdated[currentPointIndex + i].tid) {
-        drawGhostPoints()
-        checkColor(readingsUpdated[currentPointIndex].objectId)
-        ctx.beginPath()
-        ctx.arc(center.x + readingsUpdated[currentPointIndex + i].posX * 100, center.y + readingsUpdated[currentPointIndex + i].posY * - 100, 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-        ctx.fill()
+    drawGhostPoints()
+    for (let i = 0; i < readingsUpdated.length; i++) {
+      ctx.beginPath()
+      if (readingsUpdated[currentPointIndex].tid === readingsUpdated[i].tid) {
+        ctx.arc(center.x + readingsUpdated[i].posX * 100, center.y + readingsUpdated[i].posY * - 100, 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
         ctx.fillStyle = color
-        ctx.stroke()
-        ctx.closePath()
-      } else {
-        checkColor(readingsUpdated[currentPointIndex].objectId)
-        ctx.beginPath()
-        ctx.arc(center.x + readingsUpdated[currentPointIndex + i].posX * 100, center.y + readingsUpdated[currentPointIndex + i].posY * - 100, 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-        ctx.fill()
-        ctx.fillStyle = color
-        ctx.stroke()
-        ctx.closePath()
-        ctx.beginPath()
-        ctx.arc(center.x + readingsUpdated[currentPointIndex].posX * 100, center.y + readingsUpdated[currentPointIndex].posY * - 100, 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
         ctx.fill()
         ctx.stroke()
-        ctx.closePath()
-        currentPointIndex += i
-        break
       }
+      ctx.closePath()
     }
   }
 
   function drawGhostPoints () {
     for (let i = 0; i < ghostPoints.length; i++) {
+      console.log(ghostPoints)
       checkColor(ghostPoints[i].objectId)
       ctx.beginPath()
       ctx.fillStyle = color
@@ -163,11 +149,12 @@ function drawPoint () {
         ctx.fillStyle = color
         ctx.moveTo(center.x + ghostPoints[i - 1].posX * 100, center.y + ghostPoints[i - 1].posY * - 100)
         ctx.lineTo(center.x + ghostPoints[i].posX * 100, center.y + ghostPoints[i].posY * - 100)
-        ctx.fill()
         ctx.stroke()
+        ctx.strokeStyle = color
+        ctx.fill()
         ctx.closePath()
       } else {
-        break
+        ctx.moveTo(center.x + ghostPoints[i].posX * 100, center.y + ghostPoints[i].posY * - 100)
       }
     }
   }
@@ -193,32 +180,6 @@ function drawPoint () {
 //     ctx.beginPath()
 //     // ctx.fillStyle = '#a9def9'
 //     ctx.arc(center.x + readingsUpdated[currentPointIndex + i].posX * 100, center.y + readingsUpdated[currentPointIndex + i].posY * - 100, 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-//     ctx.stroke()
-//     ctx.fill()
-//     ctx.closePath()
-//   }
-// }
-
-//   function drawBackLines () {
-//     let newAddition = downPointsIndex
-//     if (readingsUpdated[currentPointIndex].objectId === readingsUpdated[currentPointIndex + 1].objectId) {
-//       for (let j = currentPointIndex; j > downPointsIndex; j--) {
-//         ctx.beginPath()
-//         ctx.moveTo(center.x + readingsUpdated[newAddition + 1].posX * 100, center.y + readingsUpdated[newAddition + 1].posY * - 100)
-//         ctx.lineTo(center.x + readingsUpdated[newAddition + 2].posX * 100, center.y + readingsUpdated[newAddition + 2].posY * - 100)
-//         newAddition++
-//         ctx.strokeStyle = '#e9c46a';
-//         ctx.stroke();
-//       }
-//       ctx.closePath()
-//     }
-//     else {
-//       downPointsIndex = currentPointIndex
-//       newAddition = currentPointIndex
-//       console.log(downPointsIndex)
-//       console.log('nowy punkt')
-//       ctx.closePath()
-//     }
 //     ctx.stroke()
 //     ctx.fill()
 //     ctx.closePath()
