@@ -57,7 +57,16 @@
   function decrementIndex () {
     index--
   }
+
+  function setTimeoutDown () {
+    if (timeout > 10){
+      timeout -= 10
+    } else {
+      timeout = 10
+    }
+  }
 </script>
+
 
 <div class="sidebar-container animate__animated animate__fadeIn">
   <div class="grid-item header-container">
@@ -70,9 +79,12 @@
   <div class="grid-item {file ? 'file-content' : 'file-loader'}">
     {#if !file}
       <div class="file-load-option-item">
-        <div class="icon">
+        <button class="icon"
+        on:click={() => {
+          fileInput.click()
+        }}>
           <Fa icon={icons.faFileArrowUp} />
-        </div>
+        </button>
         <button
           class="file-loader"
           on:click={() => {
@@ -94,7 +106,7 @@
       <div class="grid-item-file" >   
         <div class="scale-container">
               <div class="input-element">
-                  <button class="button" on:click={() => timeout -= 10} on:click={() => clearInterval(playInterval)}> - </button>
+                  <button class="button" on:click={() => setTimeoutDown()} on:click={() => clearInterval(playInterval)}> - </button>
                   <div class="output">Timestamp: {timeout}</div>
                   <button class="button"  on:click={() => timeout += 10} on:click={() => clearInterval(playInterval)}> + </button>
               </div>
@@ -233,6 +245,8 @@
     font-size: 60px;
     margin-bottom: 20px;
     color: #c0c0c0;
+    outline: none;
+    border: none;
     &:hover {
       cursor: pointer;
       color: #3bb7ffab;

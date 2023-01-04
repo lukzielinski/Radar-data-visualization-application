@@ -1,12 +1,9 @@
 <script lang="ts">
-  import { Router, Route } from 'svelte-routing'
   import CanvasContainer2D from './views/2DChart/CanvasContainer2D.svelte'
   import * as DataType from './views/FileEditor/DataType'
   import logo from './assets/logo-1.png'
-  import  animatecss from 'animate.css'
   import Sidebar from './views/Sidebar.svelte'
   import CanvasContainer3D from './views/3DChart/CanvasContainer3D.svelte';
-  import { beforeUpdate } from 'svelte';
   
 
   let currentFile: File | null = null;
@@ -73,7 +70,6 @@
       <div class="grid-item">
         <CanvasContainer3D bind:readings={readings} bind:index={index} bind:cords={cords}/>
       </div>
-        <!-- <OpenFile on:onFile={(e) => { currentFile = e.detail.file; }}/> -->
     </div>
   {/if}
 </main>
@@ -82,6 +78,14 @@
   .grid-container { 
     display: grid;
     grid-gap: 10px;
+    height: 99vh;
+    margin-left: 300px;
+    display: flex;
+  }
+  .grid-item {
+    align-items: center;
+    justify-content: center;
+    width: 40vw;
   }
   .blured {
         display: block;

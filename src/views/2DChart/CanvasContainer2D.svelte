@@ -23,7 +23,7 @@
   }
 </script>
 
-<canvas bind:this={canvas} width="2000px" height="2000px" class="canvas" style="height: 72vh; width: 82vh" id="myChart1"></canvas>
+<canvas bind:this={canvas} width="2000px" height="2000px" class="canvas" style="height: 40vw; width: 40vw" id="myChart1"></canvas>
 
 <style lang="less">
 .canvas{

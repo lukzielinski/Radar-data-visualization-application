@@ -98,8 +98,6 @@
   let data = [ keepDimensionsTrace, ...traces ]
 
   let layout = {
-    width: 800,
-    height: 695,
     margin: {
       l: 0,
       r: 0,
@@ -189,7 +187,9 @@
 <style lang="less">
   .canv3d-container {
     position: absolute;
-    right: 10px;
+    right: 40px;
     top: 12%;
+    width: 40vw;
+    height: 40vw;
   }
 </style>
