@@ -63,7 +63,7 @@ function drawPoint () {
       ctx.fill()
       ctx.fillStyle = '#000000'
       ctx.fillText(
-        `P${readingsUpdated[currentPointIndex].objectsId} (${scaledX / 100},${scaledY / 100})`,
+        `P${readingsUpdated[currentPointIndex].objectId} (${scaledX / 100},${scaledY / 100})`,
         center.x + readingsUpdated[currentPointIndex].posX * 110,
         center.y + readingsUpdated[currentPointIndex].posY * - 80
       )
@@ -141,32 +141,6 @@ function drawPoint () {
   }
 }
 
-// function drawManyPoints () {
-//   let pointsElements = 0
-//   while (readingsUpdated[currentPointIndex + pointsElements].objectsId - readingsUpdated[currentPointIndex + pointsElements + 1].objectsId < 0) {
-//     pointsElements++;
-//   }
-//   for (let i = 0; i < pointsElements + 1; i++) {
-//     const scaledX = Math.round(readingsUpdated[currentPointIndex].posX * 100)
-//     const scaledY = Math.round(readingsUpdated[currentPointIndex].posY * 100)
-//     ctx.beginPath()
-//     ctx.fillStyle = '#22223b'
-//     ctx.fillText(
-//       `P${readingsUpdated[currentPointIndex + i].objectsId} (${scaledX / 100},${scaledY / 100})`,
-//       center.x + readingsUpdated[currentPointIndex + i].posX * 110,
-//       center.y + readingsUpdated[currentPointIndex + i].posY * - 80
-//     )
-//     ctx.fill()
-//     ctx.closePath()
-//     ctx.beginPath()
-//     // ctx.fillStyle = '#a9def9'
-//     ctx.arc(center.x + readingsUpdated[currentPointIndex + i].posX * 100, center.y + readingsUpdated[currentPointIndex + i].posY * - 100, 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
-//     ctx.stroke()
-//     ctx.fill()
-//     ctx.closePath()
-//   }
-// }
-
 export function adjustZoom (e: WheelEvent) {
   const zoomAmount = e.deltaY * scrollSensitivity
   if (zoomAmount) {
@@ -187,19 +161,6 @@ function drawBackground () {
   drawLeftGridVertically()
   drawCoordinatesSystem()
 }
-
-// function wrtiteTheXandY (){
-//   const center = {
-//     x: canvas.width / 2,
-//     y: canvas.height / 2,
-//   }
-//   ctx.beginPath()
-//   ctx.font = '30px bold'
-//   ctx.fillStyle = '#000000'
-//   ctx.fillText('X', (canvas.width / 8) * cameraZoom, center.y - 10)
-//   ctx.fillText('Y', center.x - 30, (canvas.width / 8) + 290)
-//   ctx.closePath()
-// }
 
 function drawCoordinatesSystem () {
   const center = {

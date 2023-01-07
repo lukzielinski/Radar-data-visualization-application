@@ -2,14 +2,12 @@
   import * as DataType from '../FileEditor/DataType'
   import * as glCharts from './3DChartCanvas'
   import { onMount } from 'svelte'
-  // import stream from 'stream'
-  // const temp = stream.Transform.prototype
+
   export let readings: DataType.Reading[] = []
   export let index: number
   export let cords: DataType.CordsType = { x: 0, y: 0, z: 0 }
 
   import Plotly from 'plotly.js/dist/plotly'
-  import { timer, type Timer } from 'd3'
 
   let color: string
 
@@ -37,7 +35,7 @@
         width: 1,
       },
       opacity: 0,
-      color: color
+      color: color,
     },
     type: 'scatter3d',
   }
@@ -56,16 +54,16 @@
       color: string
       opacity: number
     }
-    type: string,
-    timer: NodeJS.Timeout | null,
+    type: string
+    timer: NodeJS.Timeout | null
     resetTimer: () => void
   }
 
   function createTrace (): Trace {
     return {
-      x: [ ],
-      y: [ ],
-      z: [ ],
+      x: [],
+      y: [],
+      z: [],
       mode: 'lines+markers',
       marker: {
         size: 5,
@@ -83,12 +81,11 @@
           clearTimeout(this.timer)
         }
         this.timer = setTimeout(() => {
-          this.x = [ ]
-          this.y = [ ]
-          this.z = [ ]
+          this.x = []
+          this.y = []
+          this.z = []
         }, 1000)
-      }
-
+      },
     }
   }
 
@@ -104,6 +101,8 @@
       b: 0,
       t: 0,
     },
+    height : 700,
+    width : 700,
     xaxis: {
       autorange: false,
       range: [ -12, 12 ],
@@ -135,9 +134,10 @@
     },
   }
 
+  let config = { responsive: true }
 
   onMount(() => {
-    Plotly.newPlot('myDiv', data, layout)
+    Plotly.newPlot('myDiv', data, layout, config)
   })
 
   // keep dimensions trace in sync, changes when user presses the buttons
@@ -174,22 +174,15 @@
       trace.y.shift()
       trace.z.shift()
     }
-    
-    data.length = 1;
+
+    data.length = 1
     data.push(...traces.values())
-    
-    Plotly.update('myDiv', data, layout)
+
+    Plotly.update('myDiv', data, layout, config)
   }
 </script>
 
 <div class="canv3d-container" id="myDiv" />
 
 <style lang="less">
-  .canv3d-container {
-    position: absolute;
-    right: 40px;
-    top: 12%;
-    width: 40vw;
-    height: 40vw;
-  }
 </style>

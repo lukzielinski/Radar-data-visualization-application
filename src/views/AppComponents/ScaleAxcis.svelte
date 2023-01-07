@@ -1,5 +1,4 @@
 <script lang="ts">
-
     let new_cords = {
       x: 10,
       y: 10,
@@ -38,8 +37,6 @@
         </div>
     </div>
 </div>
-
-
 
 <style lang="less">
     .input-element{
