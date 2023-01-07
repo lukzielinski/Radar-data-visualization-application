@@ -1,12 +1,12 @@
 import * as DataType from '../FileEditor/DataType'
+import { checkColor } from '../3DChart/3DChartCanvas'
 
 let canvas: HTMLCanvasElement
 let ctx: CanvasRenderingContext2D
 let currentPointIndex = 0
 let color: string
 
-const objectIdArray: number[] = []
-const colors: string[] = []
+
 const ghostPoints: DataType.Reading[] = []
 const readingsUpdated: DataType.Reading[] = []
 const pointsOnScreen: DataType.Reading[] = []
@@ -63,7 +63,7 @@ function drawPoint () {
       ctx.fill()
       ctx.fillStyle = '#000000'
       ctx.fillText(
-        `P${readingsUpdated[currentPointIndex].objectsId} (${scaledX / 100},${scaledY / 100})`,
+        `P${readingsUpdated[currentPointIndex].objectId} (${scaledX / 100},${scaledY / 100})`,
         center.x + readingsUpdated[currentPointIndex].posX * 110,
         center.y + readingsUpdated[currentPointIndex].posY * - 80
       )
@@ -103,7 +103,7 @@ function drawPoint () {
 
   function drawGhostPoints () {
     for (let i = 0; i < ghostPoints.length; i++) {
-      checkColor(ghostPoints[i].objectId)
+      const color = checkColor(ghostPoints[i].objectId)
       ctx.beginPath()
       ctx.fillStyle = color
       ctx.arc(center.x + ghostPoints[i].posX * 100, center.y + ghostPoints[i].posY * - 100, 10 * (1.25 / cameraZoom), 0, 2 * Math.PI, false)
@@ -118,24 +118,6 @@ function drawPoint () {
     drawBackLines()
   }
 
-  function checkColor (objectId: number) {
-    let isObject = false
-    for (let i = 0; i < objectIdArray.length; i++) {
-      if (objectIdArray[i] === objectId) {
-        color = colors[i]
-        isObject = true
-        break
-      }
-    }
-    if (isObject) {
-      color = colors[objectIdArray.indexOf(objectId)]
-    } else {
-      objectIdArray.push(objectId)
-      color = `#${Math.floor(Math.random() * 16777215).toString(16)}`
-      colors.push(color)
-    }
-  }
-
   function drawBackLines () {
     const center = {
       x: canvas.width / 2,
@@ -143,7 +125,7 @@ function drawPoint () {
     }
     for (let i = 1; i < ghostPoints.length; i++) {
       if (ghostPoints[i].objectId === ghostPoints[i - 1].objectId) {
-        checkColor(ghostPoints[i].objectId)
+        const color = checkColor(ghostPoints[i].objectId)
         ctx.beginPath()
         ctx.fillStyle = color
         ctx.moveTo(center.x + ghostPoints[i - 1].posX * 100, center.y + ghostPoints[i - 1].posY * - 100)
@@ -179,19 +161,6 @@ function drawBackground () {
   drawLeftGridVertically()
   drawCoordinatesSystem()
 }
-
-// function wrtiteTheXandY (){
-//   const center = {
-//     x: canvas.width / 2,
-//     y: canvas.height / 2,
-//   }
-//   ctx.beginPath()
-//   ctx.font = '30px bold'
-//   ctx.fillStyle = '#000000'
-//   ctx.fillText('X', (canvas.width / 8) * cameraZoom, center.y - 10)
-//   ctx.fillText('Y', center.x - 30, (canvas.width / 8) + 290)
-//   ctx.closePath()
-// }
 
 function drawCoordinatesSystem () {
   const center = {

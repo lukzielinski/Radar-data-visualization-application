@@ -1,5 +1,4 @@
 <script lang="ts">
-
     let new_cords = {
       x: 10,
       y: 10,
@@ -15,7 +14,7 @@
 
 
 <div class="scale-container">
-    <div class="grid-item">Scale 3D acis</div>
+    <div class="grid-item">Scale 3D axcis</div>
     <div class="grid-item">
         <div class="input-element">
             <button class="button"  on:click={() => scale_cords.x = new_cords.x - 1}  on:click={ () => new_cords.x -= 1}> - </button>
@@ -38,8 +37,6 @@
         </div>
     </div>
 </div>
-
-
 
 <style lang="less">
     .input-element{
