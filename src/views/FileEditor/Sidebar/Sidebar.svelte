@@ -9,6 +9,7 @@
 
   export let index = 0
   let min = 0
+  let stopActive = true
   let max = 100
   let timeout = 50
   $: if (readings.length > 0) {
@@ -116,22 +117,27 @@
       <div
         class="grid-item-file buttons-section animate__animated animate__fadeIn"
       >
+      {#if stopActive}
         <button
           class="button play"
           on:click={() => {
             playInterval = setInterval(incrementIndex, timeout)
+            stopActive = false
           }}
         >
           <Fa icon={icons.faPlay} />
         </button>
+        {:else}
         <button
           class="button stop"
           on:click={() => {
             clearInterval(playInterval)
+            stopActive = true
           }}
         >
-          <Fa icon={icons.faStop} />
-        </button>
+        <Fa icon={icons.faStop} />
+      </button>
+      {/if}
         <button
           class="button forward"
           on:click={() => {
