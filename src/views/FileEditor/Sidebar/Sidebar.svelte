@@ -86,7 +86,7 @@
           bind:this={fileInput}
           placeholder="Select file"
           type="file"
-          accept=".csv, .dat"
+          accept=".csv"
         />
       </div>
     {:else}
